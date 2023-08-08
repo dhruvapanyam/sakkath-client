@@ -1,7 +1,7 @@
 export const server_url = {
-    // DOMAIN: `http://192.168.0.189`,
+    DOMAIN: `http://192.168.0.189`,
     // DOMAIN: `http://13.51.170.191`,
-    DOMAIN: `http://35.154.194.151`,
+    // DOMAIN: `http://35.154.194.151`,
     PORT: 4040
 }
 

@@ -438,6 +438,12 @@ function PendingMatch({match, id}){
     
     const opp = match.team_1._id === id ? match.team_2 : match.team_1;
 
+
+    var submit_status = 'pending';
+    if(match.result.status === 'inconsistent') submit_status = 'inconsistent';
+    else if(match.team_1._id === id && match.submitted_score_1.status === 'submitted') submit_status = 'waiting'
+    else if(match.team_2._id === id && match.submitted_score_2.status === 'submitted') submit_status = 'waiting'
+
     return <div style={{marginTop:'0px'}}>
         <div style={{textAlign:'center',color:'white',padding:'20px'}}>Pending</div>
         <Paper sx={{backgroundColor:'white', borderRadius:'0',padding:'10px'}}>
@@ -462,9 +468,15 @@ function PendingMatch({match, id}){
                             Match # {match.match_number}
                         </div>
                         {
-                            match.result.status === 'inconsistent' &&
+                            submit_status === 'inconsistent' &&
                             <div className='centered' style={{height:'100%', padding:'3px', fontSize:13}}>
                                 <Alert severity='warning'>Inconsistent scores!</Alert>
+                            </div>
+                        }
+                        {
+                            submit_status === 'waiting' &&
+                            <div className='centered' style={{height:'100%', padding:'3px', fontSize:13}}>
+                                <Alert severity='success'>Waiting for other team!</Alert>
                             </div>
                         }
                     </Stack>
@@ -573,8 +585,8 @@ export default function TeamDetails(){
         <TeamUpcoming id={id} teamInfo={teamInfo}></TeamUpcoming>
         <TeamResults id={id} own_team={teamInfo?.own_team} results={teamResults?.results || []}></TeamResults>
         {/* {pendingScores} */}
-        {/* {teamInfo?.own_team && <PendingMatch match={teamInfo?.upcoming} id={id}></PendingMatch>} */}
-        {1 && <PendingMatch match={teamInfo?.upcoming} id={id}></PendingMatch>}
+        {teamInfo?.own_team && <PendingMatch match={teamInfo?.upcoming} id={id}></PendingMatch>}
+        {/* {1 && <PendingMatch match={teamInfo?.upcoming} id={id}></PendingMatch>} */}
     </>
     )
 }

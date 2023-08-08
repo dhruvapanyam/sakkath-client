@@ -64,7 +64,7 @@ export function TeamDisplay({team_name, logo, logo_size, team_name_size, rank, t
         <Box component="img" sx={{borderRadius: '50%'}} src={getTeamLogo(logo)} height={logo_size} width={logo_size}></Box>
         <div style={{overflow: "hidden", textOverflow: "ellipsis", paddingLeft: '8px', width: '80%', whiteSpace:'nowrap'}}> 
             {team_name}
-            {rank !== undefined && <span style={{fontSize: `${team_name_size-2}px`, fontWeight: fw}}> [{rank+1}]</span>}
+            {rank != undefined && <span style={{fontSize: `${team_name_size-2}px`, fontWeight: fw}}> [{rank+1}]</span>}
         </div>
     </div>
 
@@ -72,7 +72,7 @@ export function TeamDisplay({team_name, logo, logo_size, team_name_size, rank, t
     return <div style={{display: 'flex', alignItems:'center',fontSize:`${team_name_size}px`, fontWeight: fw, color:color}} onClick={()=>{navigate(`/team/${team_id}`)}}>
         <div style={{overflow: "hidden", textOverflow: "ellipsis", paddingRight: '8px', width: '80%', whiteSpace:'nowrap'}}> 
             {team_name}
-            {rank !== undefined && <span style={{fontSize: `${team_name_size-2}px`, fontWeight: fw}}> [{rank+1}]</span>}
+            {rank != undefined && <span style={{fontSize: `${team_name_size-2}px`, fontWeight: fw}}> [{rank+1}]</span>}
         </div>
         <Box component="img" sx={{borderRadius: '50%'}} src={getTeamLogo(logo)} height={logo_size} width={logo_size}></Box>
     </div>
@@ -134,6 +134,13 @@ export function SlotFixtures({heading,data,table_type='Swiss'}){
                 }
                 // bg_col = 'linear-gradient(to right, blue, green)'
                 // console.log(bg_col)
+
+                let rank1 = null, rank2 = null;
+                if((match?.stage?.stage_name !== 'A-R1' && match?.stage?.stage_name !== 'B-R1') || 1){
+                    rank1 = match?.rank_1;
+                    rank2 = match?.rank_2;
+                }
+
                 return <div key={i}>
                         {table_type === 'Bracket' && 
                             <div style={{color:'white', fontSize:'9px', fontWeight:600,padding:'5px'}}>
@@ -148,8 +155,8 @@ export function SlotFixtures({heading,data,table_type='Swiss'}){
                     }}>
                         <Grid container direction="row" spacing={1} padding={1}>
                             <Grid item sx={{width: '67%'}}>
-                                {match_card_team_row(match?.team_1, match.result.score_1 || '', match?.rank_1, loser1)}
-                                {match_card_team_row(match?.team_2, match.result.score_2 || '', match?.rank_2, loser2)}
+                                {match_card_team_row(match?.team_1, match.result.score_1 || '', rank1, loser1)}
+                                {match_card_team_row(match?.team_2, match.result.score_2 || '', rank2, loser2)}
                             </Grid>
                             <Divider orientation="vertical" flexItem>
                             </Divider>
