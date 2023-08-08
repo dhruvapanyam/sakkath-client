@@ -1,10 +1,9 @@
 import { useParams, useSearchParams } from 'react-router-dom';
 import axios from 'axios'
 import React, { useEffect, useState } from 'react'
-// import { getImage } from './teamDetails'
 import { useNavigate } from 'react-router-dom';
 // import {DivisionTab} from './teamList'
-import { server_url, colors_gradient, get_left_color } from './globals';
+import { server_url, colors_gradient, get_left_color, getTeamLogo } from './globals';
 import { Grid, Typography, Stack, Divider, Box, IconButton, Button, Alert } from '@mui/material';
 import {Paper} from '@mui/material';
 import Modal from '@mui/material/Modal';
@@ -13,23 +12,10 @@ import {ButtonTabs, SlotFixtures, TeamDisplay} from './schedule'
 import { handleError } from './utils/axios';
 
 
-
-export function getImage(img){
-    const images = require.context('./static/', true);
-    var imageUrl;
-    try{
-        imageUrl = images(`./${img}`)
-    }
-    catch(e){
-        imageUrl = undefined
-    }
-    return imageUrl
-}
-
 function TeamOverview({teamData}){
     // console.log(teamData)
     // console.log(teamData)
-    const logo = getImage(teamData?.team_data?.logo)
+    const logo = getTeamLogo(teamData?.team_data?.logo)
     // console.log(logo)
 
     const record = teamData?.record
@@ -227,13 +213,23 @@ function TeamResults({results, id, own_team=false}){
                 let bg_col = get_left_color(result.stage.division, result.stage.stage_name[0], 'to right') || 'white';
                 bg_col = 'white';
 
+                const max_team_name_length = 15;
+                let team_1_name = result.team_1.team_name;
+                if(team_1_name.length > max_team_name_length){
+                    team_1_name = team_1_name.slice(0,max_team_name_length) + '...'
+                }
+                let team_2_name = result.team_2.team_name;
+                if(team_2_name.length > max_team_name_length){
+                    team_2_name = team_1_name.slice(0,max_team_name_length) + '...'
+                }
+
                 // return <div><Paper key={i} elevation={16} sx={{backgroundColor: outcome ? 'rgb(124, 176, 114)' : 'rgb(181, 121, 118)', height:'110px'}}>
                 return <div key={i}><Paper key={i} elevation={16} sx={{background: bg_col, boxShadow:`0px 5px ${outcome_colors[outcome]}`}}>
                             <Stack padding={1}>
                                 <Grid container>
                                     <Grid item xs={5}>
                                         <div style={{float:'right'}}>
-                                        <TeamDisplay reverse={true} team_name={result.team_1.team_name} logo={result.team_1.logo} team_id={result.team_1._id} logo_size={20} team_name_size={12}></TeamDisplay>
+                                        <TeamDisplay reverse={true} team_name={team_1_name} logo={result.team_1.logo} team_id={result.team_1._id} logo_size={20} team_name_size={12}></TeamDisplay>
                                         </div>
                                     </Grid>
                                     <Grid item xs={2}>
@@ -474,7 +470,7 @@ function PendingMatch({match, id}){
                     </Stack>
                 </Grid>
                 <Grid item xs={2} sx={{}}>
-                    <Box component={'img'} sx={{width: '100%',aspectRatio:'1', borderRadius:'50%'}} src={getImage(opp?.logo)}></Box>
+                    <Box component={'img'} sx={{width: '100%',aspectRatio:'1', borderRadius:'50%'}} src={getTeamLogo(opp?.logo)}></Box>
                 </Grid>
             </Grid>
         </Paper>

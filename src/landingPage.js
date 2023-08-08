@@ -1,6 +1,5 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react'
-// import { getImage } from './teamDetails'
 import { useNavigate } from 'react-router-dom';
 // import {DivisionTab} from './teamList'
 import { server_url } from './globals';
@@ -8,7 +7,7 @@ import { Grid, Typography, ButtonBase, Stack, Divider, Box, IconButton, Tab, Tab
 import {Paper} from '@mui/material';
 
 
-import { getImage } from './globals';
+import { getImage, getTeamLogo } from './globals';
 
 export function LandingCard({value}){
     const navigate = useNavigate();

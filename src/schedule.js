@@ -1,9 +1,8 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react'
-// import { getImage } from './teamDetails'
 import { useNavigate } from 'react-router-dom';
 // import {DivisionTab} from './teamList'
-import { server_url } from './globals';
+import { getTeamLogo, server_url } from './globals';
 import { Grid, Typography, ButtonBase, Stack, Divider, Box, IconButton, Tab, Tabs, CircularProgress } from '@mui/material';
 import {Paper} from '@mui/material';
 
@@ -62,7 +61,7 @@ export function TeamDisplay({team_name, logo, logo_size, team_name_size, rank, t
 
     if(!reverse)
     return <div style={{display: 'flex', alignItems:'center',fontSize:`${team_name_size}px`, fontWeight: fw, color:color}} onClick={()=>{if(team_id) navigate(`/team/${team_id}`)}}>
-        <Box component="img" sx={{borderRadius: '50%'}} src={getImage(logo)} height={logo_size} width={logo_size}></Box>
+        <Box component="img" sx={{borderRadius: '50%'}} src={getTeamLogo(logo)} height={logo_size} width={logo_size}></Box>
         <div style={{overflow: "hidden", textOverflow: "ellipsis", paddingLeft: '8px', width: '80%', whiteSpace:'nowrap'}}> 
             {team_name}
             {rank !== undefined && <span style={{fontSize: `${team_name_size-2}px`, fontWeight: fw}}> [{rank+1}]</span>}
@@ -75,7 +74,7 @@ export function TeamDisplay({team_name, logo, logo_size, team_name_size, rank, t
             {team_name}
             {rank !== undefined && <span style={{fontSize: `${team_name_size-2}px`, fontWeight: fw}}> [{rank+1}]</span>}
         </div>
-        <Box component="img" sx={{borderRadius: '50%'}} src={getImage(logo)} height={logo_size} width={logo_size}></Box>
+        <Box component="img" sx={{borderRadius: '50%'}} src={getTeamLogo(logo)} height={logo_size} width={logo_size}></Box>
     </div>
 }
 

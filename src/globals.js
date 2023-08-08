@@ -1,6 +1,6 @@
 export const server_url = {
-    // DOMAIN: `http://192.168.0.189`,
-    DOMAIN: `http://13.51.170.191`,
+    DOMAIN: `http://192.168.0.189`,
+    // DOMAIN: `http://13.51.170.191`,
     PORT: 4040
 }
 
@@ -15,6 +15,20 @@ export function getImage(img){
     }
     return imageUrl
 }
+
+export function getTeamLogo(img){
+    const images = require.context('./static/team_logos/', true);
+    var imageUrl;
+    try{
+        imageUrl = images(`./${img}`)
+    }
+    catch(e){
+        imageUrl = undefined
+    }
+    return imageUrl
+}
+
+
 
 const gradient_left = 30
 const gradient_right = 70

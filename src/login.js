@@ -1,5 +1,5 @@
 import sakkath_logo from './static/sakkath_logo.png'
-import sample_logo from './static/blank.webp'
+import sample_logo from './static/team_logos/blank.webp'
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import { Alert, Button, Grid, Stack } from '@mui/material';
