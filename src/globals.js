@@ -1,6 +1,7 @@
 export const server_url = {
     // DOMAIN: `http://192.168.0.189`,
-    DOMAIN: `http://13.51.170.191`,
+    // DOMAIN: `http://13.51.170.191`,
+    DOMAIN: `http://35.154.194.151`,
     PORT: 4040
 }
 
@@ -44,7 +45,7 @@ export const colors = {
     "Open": {
         'A': {left: '#babfbd', right: '#5773a1'},
         'B': {left: '#99bdb6', right: '#5773a1'},
-        'S': {left: '#246c6e', right: '#5773a1'},
+        'S': {left: '#44a2a6', right: '#5773a1'},
         'F': {left: '#246c6e', right: '#5773a1'},
     },
     "Women's": {

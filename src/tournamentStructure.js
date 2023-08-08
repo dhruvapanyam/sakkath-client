@@ -291,7 +291,8 @@ export default function TournamentSetup(){
                 axios.post(`${server_url.DOMAIN}:${server_url.PORT}/schedule_start`)
                     .then(res => {
                         alert('Tournament has been set up!');
-                        navigate('/')
+                        // PLEASE UNCOMMENT!
+                        // navigate('/')
                     })
                     .catch(err => {
                         console.log(err)
