@@ -44,6 +44,7 @@ export const colors = {
     "Open": {
         'A': {left: '#babfbd', right: '#5773a1'},
         'B': {left: '#99bdb6', right: '#5773a1'},
+        'S': {left: '#246c6e', right: '#5773a1'},
         'F': {left: '#246c6e', right: '#5773a1'},
     },
     "Women's": {
