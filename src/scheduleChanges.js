@@ -134,7 +134,7 @@ export default function ScheduleChanges(){
                         let slot_num = day*num_fields*time_slots[day].length + i*num_fields + j;
                         return <div key={j} style={{float: 'left'}}>
                             {/* {select_options(slot_num)} */}
-                            <input className='input-slot-number' id={`input-slot-number-${slot_num}`} type='number' style={{width:'30px'}}></input>
+                            <input className='input-slot-number' id={`input-slot-number-${slot_num}`} type='number' style={{width:'30px',fontSize:9, fontWeight:300}}></input>
                         </div>
                     })}
                 </div>

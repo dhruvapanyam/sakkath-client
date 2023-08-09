@@ -82,7 +82,8 @@ export function TeamDisplay({team_name, logo, logo_size, team_name_size, rank, t
 export function SlotFixtures({heading,data,table_type='Swiss'}){
 
     
-    console.log(data)
+    // console.log(data)
+    data.sort((m1,m2) => m1.slot_number - m2.slot_number)
     let heading_dom = <div style={{textAlign:'center'}}>{heading}</div>
 
     function match_card_team_row(team_info, score, rank, loser=false){
@@ -103,7 +104,7 @@ export function SlotFixtures({heading,data,table_type='Swiss'}){
         </Grid>
     }
 
-    console.log('table type:',table_type)
+    // console.log('table type:',table_type)
 
     let cards = <Stack spacing={2} padding={4} paddingTop={2}>
         {data.map((match, i) => {
@@ -194,8 +195,8 @@ export default function Schedule(){
 
 
     function activateDay(day){
-        console.log('activating',day)
-        setActiveDay(day);
+        localStorage.setItem('active_day',day);
+        setActiveDay(parseInt(day));
     }
     // const [activeMode, setActiveMode] = useState('Time-wise');
 
@@ -208,6 +209,8 @@ export default function Schedule(){
         .then(res => {
             setSchedule([...res.data])
             console.log(res.data)
+            let day = localStorage.getItem('active_day');
+            if(day) activateDay(day)
             setDataLoaded(true);
         })
         .catch(err => {
@@ -243,13 +246,13 @@ export default function Schedule(){
         })
     }
 
-    console.log('TABLES',tables)
+    // console.log('TABLES',tables)
     
 
 
     return (
         <div style={{marginTop: 80}}>
-            <ButtonTabs tab_names={[1,2,3]} active_tab={activeDay} activate_tab={setActiveDay} display_func={x => `Day ${x}`}></ButtonTabs>
+            <ButtonTabs tab_names={[1,2,3]} active_tab={activeDay} activate_tab={activateDay} display_func={x => `Day ${x}`}></ButtonTabs>
             {/* <ButtonTabs tab_names={["A-R1","A-R2","A-R3","A-R4","A-R5"]} active_tab={"A-R4"} ></ButtonTabs> */}
             {/* <DivisionTab divisions={[1,2,3]} activeTab={activeDay} activateTab={setActiveDay} display_func={(x)=>`Day ${x}`}></DivisionTab> */}
             {/* <DivisionTab divisions={['Time-wise','Stage-wise']} activeTab={activeMode} activateTab={setActiveMode} top_offset={false}></DivisionTab> */}
