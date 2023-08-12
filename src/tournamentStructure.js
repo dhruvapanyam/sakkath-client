@@ -345,6 +345,11 @@ export default function TournamentSetup(){
     {body}
     <br></br>
     <button onClick={()=>{
+        let validated = window.confirm('Are you sure you want to reset all the tournament data?');
+        if(!validated) return;
+        validated = window.confirm('Are you absolutely sure you want to reset all the tournament data?');
+        if(!validated) return;
+        console.log('continuing')
         validateParams();
     }}>check params</button>
     </div>

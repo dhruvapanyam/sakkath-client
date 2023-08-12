@@ -208,8 +208,17 @@ export default function Standings(){
         if(activeDivision in standings === false) return;
         if(activePool in standings[activeDivision] === false) return;
 
-        let round = localStorage.getItem(`schedule-${activeDivision}-${activePool}`)
-        activateRound(round ? round : Object.keys(standings[activeDivision][activePool])[0]);
+        // navigate to latest round
+        let latest_round;
+        for(let round in standings[activeDivision][activePool]){
+            if(latest_round && standings[activeDivision][activePool][round].info?.status === 'pending') break;
+            latest_round = round;
+        }
+
+        activateRound(latest_round);
+
+        // let round = localStorage.getItem(`schedule-${activeDivision}-${activePool}`)
+        // activateRound(round ? round : Object.keys(standings[activeDivision][activePool])[0]);
     }, [standings,activeDivision,activePool])
 
     

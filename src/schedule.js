@@ -2,7 +2,7 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 // import {DivisionTab} from './teamList'
-import { getTeamLogo, server_url } from './globals';
+import { colonizeTime, getTeamLogo, get_left_color, server_url } from './globals';
 import { Grid, Typography, ButtonBase, Stack, Divider, Box, IconButton, Tab, Tabs, CircularProgress } from '@mui/material';
 import {Paper} from '@mui/material';
 
@@ -84,7 +84,7 @@ export function SlotFixtures({heading,data,table_type='Swiss'}){
     
     // console.log(data)
     data.sort((m1,m2) => m1.slot_number - m2.slot_number)
-    let heading_dom = <div style={{textAlign:'center'}}>{heading}</div>
+    let heading_dom = <div id={heading} style={{textAlign:'center', scrollMarginTop:'70px'}}>{heading}</div>
 
     function match_card_team_row(team_info, score, rank, loser=false){
 
@@ -172,7 +172,7 @@ export function SlotFixtures({heading,data,table_type='Swiss'}){
                                     </div>
                                     {/* <hr style={{margin: '0'}}></hr> */}
                                     <div style={{margin: '0', padding:'0',lineHeight:1.2}}>
-                                        <span style={{fontSize: '9px', fontWeight:200}}>{match.start_time.slice(0,2)}:{match.start_time.slice(2,4)} </span>
+                                        <span style={{fontSize: '9px', fontWeight:200}}>{colonizeTime(match.start_time)} </span>
                                         <span style={{fontSize: '9px', fontWeight:500}}>Field {match.field}</span>
                                     </div>
 
@@ -187,6 +187,84 @@ export function SlotFixtures({heading,data,table_type='Swiss'}){
 
     return <div style={{color:'white', marginTop: '15px'}}>{heading_dom}{cards}</div>
 
+}
+
+function ScheduleOverview({tables}){
+    for(let i=0; i<tables.length; i++){
+        tables[i].table_data.sort((m1,m2) => m1.slot_number - m2.slot_number);
+    }
+    var heading = <div className='centered' style={{color:'white'}}>Day Overview</div>
+
+    var legend = {};
+    for(let table of tables){
+        for(let match of table.table_data){
+            let bg_col = get_left_color(match?.stage?.division, match?.stage?.stage_name[0]);
+            legend[bg_col] = {division: match?.stage?.division, stage_name: match?.stage?.stage_name}
+        }
+    }
+
+    var cols = Object.keys(legend);
+    cols.sort((col1,col2) => {
+        if(legend[col1].division+legend[col1].stage_name > legend[col2].division+legend[col2].stage_name) return 1
+        return -1
+    })
+
+
+    function scrollToTable(timeslot){
+        var myElement = document.getElementById(timeslot);
+        if(!myElement) return;
+        console.log('scrolling')
+        // var topPos = myElement.offsetTop;
+        // document.getElementById('schedule-container').scrollTop = topPos;
+        myElement.scrollIntoView({ behavior: 'smooth' });
+    }
+
+
+    return <div style={{marginTop:20, color:'white'}}>
+        {heading}
+        <Stack padding={1} paddingRight={4}>
+            {tables.map((table,i) => {
+                return <Grid container key={i}  onClick={()=>{scrollToTable(table.heading)}}>
+                    <Grid item xs={2}>
+                        <div className='centered' style={{height:'30px',fontSize:14}}>{table.heading}</div>
+                    </Grid>
+                    <Grid item xs={10}>
+                        <Grid container>
+                            {table.table_data.map((match,j) => {
+                                let bg_col = get_left_color(match?.stage?.division, match?.stage?.stage_name[0])
+                                let stage = match?.stage?.stage_name || '';
+                                let display_stage = stage;
+                                if(stage.split('-').length > 1){
+                                    display_stage = 'R' + stage.split('-')[1][1]
+                                }
+                                return <Grid item xs={2} key={j}>
+                                    <div className='centered' style={{color:'black',width:'100%', height:'30px', background: bg_col, border: '1px solid black'}}>
+                                        <div className='centered' style={{fontSize:10}}>
+                                            {display_stage}
+                                        </div>
+                                    </div>
+                                </Grid>
+                            })}
+                        </Grid>
+                    </Grid>
+                    
+                    
+                </Grid>
+            })}
+
+            <Grid container paddingTop={2}>
+                {cols.map((col,i) => {
+                    return <Grid key={i} item xs={4} padding={1}>
+                            <div style={{width:'100%', height: '22px'}}>
+                                <div style={{height:'20px', width:'20px',border:'1px solid black', background: col, float:'left'}}></div>
+                                <div className='centered' style={{float:'left', marginLeft:'5px', fontSize:12, height:'100%'}}>{legend[col].division} - {legend[col].stage_name[0]}</div>
+                            </div>
+                        </Grid>
+                })}
+            </Grid>
+            
+        </Stack>
+    </div>
 }
 
 export default function Schedule(){
@@ -208,7 +286,7 @@ export default function Schedule(){
         )
         .then(res => {
             setSchedule([...res.data])
-            console.log(res.data)
+            // console.log(res.data)
             let day = localStorage.getItem('active_day');
             if(day) activateDay(day)
             setDataLoaded(true);
@@ -241,7 +319,7 @@ export default function Schedule(){
     sorted_slots.sort();
     for(let slot of sorted_slots){
         tables.push({
-            heading: slot,
+            heading: colonizeTime(slot),
             table_data: slots[slot]
         })
     }
@@ -251,15 +329,17 @@ export default function Schedule(){
 
 
     return (
-        <div style={{marginTop: 80}}>
+        <div id='schedule-container' style={{marginTop: 80}}>
             <ButtonTabs tab_names={[1,2,3]} active_tab={activeDay} activate_tab={activateDay} display_func={x => `Day ${x}`}></ButtonTabs>
             {/* <ButtonTabs tab_names={["A-R1","A-R2","A-R3","A-R4","A-R5"]} active_tab={"A-R4"} ></ButtonTabs> */}
             {/* <DivisionTab divisions={[1,2,3]} activeTab={activeDay} activateTab={setActiveDay} display_func={(x)=>`Day ${x}`}></DivisionTab> */}
             {/* <DivisionTab divisions={['Time-wise','Stage-wise']} activeTab={activeMode} activateTab={setActiveMode} top_offset={false}></DivisionTab> */}
             {/* <ScheduleTables tables={tables}></ScheduleTables> */}
 
+            {tables.length && <ScheduleOverview tables={tables}></ScheduleOverview>}
+
             {tables.map((table, i) => {
-                return <SlotFixtures key={i} heading={table.heading + ' hrs'} data={table.table_data}></SlotFixtures>
+                return <SlotFixtures key={i} heading={table.heading} data={table.table_data}></SlotFixtures>
             })}
         </div>
     )

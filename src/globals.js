@@ -30,7 +30,7 @@ export function getTeamLogo(img){
 
 
 
-const gradient_left = 30
+const gradient_left = 40
 const gradient_right = 70
 
 export const colors_gradient = (div, c, dir='to right') => {
@@ -59,4 +59,10 @@ export const get_left_color = (div, c) => {
     if(c in colors[div] === false) return;
 
     return colors[div][c].left;
+}
+
+
+export const colonizeTime = (time_s) => {
+    if(!time_s) return time_s;
+    return time_s.slice(0,2) + ':' + time_s.slice(2,4);
 }

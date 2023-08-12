@@ -220,7 +220,21 @@ function TeamResults({results, id, own_team=false}){
                 }
                 let team_2_name = result.team_2.team_name;
                 if(team_2_name.length > max_team_name_length){
-                    team_2_name = team_1_name.slice(0,max_team_name_length) + '...'
+                    team_2_name = team_2_name.slice(0,max_team_name_length) + '...'
+                }
+
+                var my_team, opp_team, my_score, opp_score;
+                if(result.team_1._id.toString() === id){
+                    my_team = 'team_1';
+                    opp_team = 'team_2';
+                    my_score = result.result.score_1;
+                    opp_score = result.result.score_2;
+                }
+                else{
+                    my_team = 'team_2';
+                    opp_team = 'team_1';
+                    my_score = result.result.score_2;
+                    opp_score = result.result.score_1;
                 }
 
                 // return <div><Paper key={i} elevation={16} sx={{backgroundColor: outcome ? 'rgb(124, 176, 114)' : 'rgb(181, 121, 118)', height:'110px'}}>
@@ -229,16 +243,17 @@ function TeamResults({results, id, own_team=false}){
                                 <Grid container>
                                     <Grid item xs={5}>
                                         <div style={{float:'right'}}>
-                                        <TeamDisplay reverse={true} team_name={team_1_name} logo={result.team_1.logo} team_id={result.team_1._id} logo_size={20} team_name_size={12}></TeamDisplay>
+                                        <TeamDisplay reverse={true} team_name={result[my_team]?.team_name} logo={result[my_team]?.logo} team_id={result[my_team]?._id} logo_size={25} team_name_size={12}></TeamDisplay>
                                         </div>
                                     </Grid>
                                     <Grid item xs={2}>
                                         <div className='centered'>
-                                            {result.result.score_1}-{result.result.score_2}
+                                            {my_score}-{opp_score}
                                         </div>
                                     </Grid>
                                     <Grid item xs={5}>
-                                        <TeamDisplay team_name={result.team_2.team_name} logo={result.team_2.logo} team_id={result.team_2._id} logo_size={20} team_name_size={12}></TeamDisplay>
+                                        <TeamDisplay reverse={false} team_name={result[opp_team]?.team_name} logo={result[opp_team]?.logo} team_id={result[opp_team]?._id} logo_size={25} team_name_size={12}></TeamDisplay>
+                                        {/* <TeamDisplay team_name={result.team_2.team_name} logo={result.team_2.logo} team_id={result.team_2._id} logo_size={20} team_name_size={12}></TeamDisplay> */}
                                     </Grid>
                                 </Grid>
                                 {/* <hr color='lightgrey' style={{width:'70%', border:'none',height:'1px'}}></hr>
@@ -260,7 +275,7 @@ function TeamResults({results, id, own_team=false}){
                                     </Grid>
                                 </Grid> */}
                                 <hr color='lightgrey' style={{width:'70%', border:'none',height:'1px'}}></hr>
-                                <Grid container onClick={()=>{handleOpen(i)}}>
+                                <Grid container>
                                     <Grid item xs={12}>
                                         <div className='centered' style={{fontSize:11}}>
                                             {result?.stage?.stage_name}&nbsp; &nbsp;|&nbsp; &nbsp;Day {result?.day}&nbsp; &nbsp;|&nbsp; &nbsp;{result?.start_time} hrs&nbsp; &nbsp;|&nbsp; &nbsp;Field-{result?.field}
@@ -269,6 +284,15 @@ function TeamResults({results, id, own_team=false}){
                                 </Grid>
                             </Stack>
                         </Paper>
+                                {own_team && 
+                                    <Grid container>
+                                        <Grid item xs={3}></Grid>
+                                        <Grid item xs={6} onClick={()=>{handleOpen(i)}}>
+                                            <div className='centered' style={{backgroundColor:'teal',height:'20px',fontSize:11, marginTop:5, borderBottomLeftRadius:'10px',borderBottomRightRadius:'10px',}}>Submit Spirit Score</div>
+                                        </Grid>
+                                        <Grid item xs={3}></Grid>
+                                    </Grid>
+                                }
                         {/* <div className='centered' style={{marginTop:'5px'}}><Button sx={{fontSize:8}} variant='contained' color='primary'>submit spirit score</Button></div> */}
 
 
@@ -440,11 +464,12 @@ function PendingMatch({match, id}){
 
 
     var submit_status = 'pending';
+    var submit_score = {};
     if(match.result.status === 'inconsistent') submit_status = 'inconsistent';
-    else if(match.team_1._id === id && match.submitted_score_1.status === 'submitted') submit_status = 'waiting'
-    else if(match.team_2._id === id && match.submitted_score_2.status === 'submitted') submit_status = 'waiting'
+    else if(match.team_1._id === id && match.submitted_score_1.status === 'submitted') {submit_status = 'waiting'; submit_score = match.submitted_score_1}
+    else if(match.team_2._id === id && match.submitted_score_2.status === 'submitted') {submit_status = 'waiting'; submit_score = match.submitted_score_2}
 
-    return <div style={{marginTop:'0px'}}>
+    return <div style={{marginTop:'0px', marginBottom:'40px'}}>
         <div style={{textAlign:'center',color:'white',padding:'20px'}}>Pending</div>
         <Paper sx={{backgroundColor:'white', borderRadius:'0',padding:'10px'}}>
             {/* <hr></hr> */}
@@ -475,8 +500,8 @@ function PendingMatch({match, id}){
                         }
                         {
                             submit_status === 'waiting' &&
-                            <div className='centered' style={{height:'100%', padding:'3px', fontSize:13}}>
-                                <Alert severity='success'>Waiting for other team!</Alert>
+                            <div className='centered' style={{height:'100%', padding:'15px', fontSize:13}}>
+                                <Alert severity='success'>Submitted ({submit_score?.score_1}-{submit_score?.score_2}), waiting for other team!</Alert>
                             </div>
                         }
                     </Stack>
@@ -583,9 +608,11 @@ export default function TeamDetails(){
         <TeamOverview teamData={{...teamInfo, ...teamResults}}></TeamOverview>
         {/* <hr style={{width:'90%', marginLeft:'5%',}}></hr> */}
         <TeamUpcoming id={id} teamInfo={teamInfo}></TeamUpcoming>
+
+        {teamInfo?.own_team && <PendingMatch match={teamInfo?.upcoming} id={id}></PendingMatch>}
+        
         <TeamResults id={id} own_team={teamInfo?.own_team} results={teamResults?.results || []}></TeamResults>
         {/* {pendingScores} */}
-        {teamInfo?.own_team && <PendingMatch match={teamInfo?.upcoming} id={id}></PendingMatch>}
         {/* {1 && <PendingMatch match={teamInfo?.upcoming} id={id}></PendingMatch>} */}
     </>
     )
