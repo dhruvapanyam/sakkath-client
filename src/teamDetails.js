@@ -70,6 +70,7 @@ function TeamUpcoming({id, teamInfo}){
     var fixture_details;
     if(fixture === null){
         let msg = teamInfo?.team_data?.current_stage_id?.type != 'Swiss' ? 'N/A' : `Waiting for results of ${teamInfo?.team_data?.current_stage_id?.stage_name}...`
+        
         fixture_details = <div className='next-fixture-details' style={{paddingTop: '27px'}}>{msg}</div>
     }
     else{
@@ -82,9 +83,13 @@ function TeamUpcoming({id, teamInfo}){
     console.log('fixture',fixture)
     const opp = fixture?.team_1?._id === id ? fixture?.team_2 : fixture?.team_1;
 
+    let waiting_msg = `Waiting for results of ${teamInfo?.team_data?.current_stage_id?.stage_name}...`;
+    if(teamInfo?.team_data?.current_stage_id?.stage_name === 'F'){
+        waiting_msg = 'Your tournament is complete!'
+    }
 
     let waiting_dom = <div className='centered' style={{height:'100%', fontSize:'14px'}}>
-        Waiting for results of {teamInfo?.team_data?.current_stage_id?.stage_name}...
+        {waiting_msg}
     </div>
 
     let upcoming_dom = <Grid container sx={{height:'100%'}}>
@@ -171,7 +176,7 @@ function TeamResults({results, id, own_team=false}){
         console.log(s1, s2, mvp, msp, comments)
 
         axios.post(
-            `${server_url.DOMAIN}:${server_url.PORT}/spirit_score/${results[openResult]._id}`,
+            `${server_url.URL}/spirit_score/${results[openResult]._id}`,
             {
                 spirit_score_1: s1,
                 spirit_score_2: s2,
@@ -444,7 +449,7 @@ function PendingMatch({match, id}){
         console.log(s1,s2)
 
         axios.post(
-            `${server_url.DOMAIN}:${server_url.PORT}/result/${match._id}`,
+            `${server_url.URL}/result/${match._id}`,
             {
                 score_1: s1,
                 score_2: s2,
@@ -579,7 +584,7 @@ export default function TeamDetails(){
     useEffect(() => {
         console.log('using effect')
         axios.get(
-            `${server_url.DOMAIN}:${server_url.PORT}/team_results/${id}`
+            `${server_url.URL}/team_results/${id}`
         )
         .then(res => {
             console.log('results')
@@ -592,7 +597,7 @@ export default function TeamDetails(){
     useEffect(() => {
         console.log('using effect')
         axios.get(
-            `${server_url.DOMAIN}:${server_url.PORT}/team_info/${id}`
+            `${server_url.URL}/team_info/${id}`
         )
         .then(res => {
             console.log('info')

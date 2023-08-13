@@ -1,7 +1,7 @@
 export const server_url = {
-    // DOMAIN: `http://192.168.0.189`,
-    DOMAIN: `http://35.154.194.151`,
-    PORT: 4040
+    // URL: `http://192.168.0.189`,
+    // URL: `http://192.168.68.71`
+    URL: `https://35.154.194.151`,
 }
 
 export function getImage(img){

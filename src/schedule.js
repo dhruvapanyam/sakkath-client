@@ -282,7 +282,7 @@ export default function Schedule(){
 
     useEffect(() => {
         axios.get(
-            `${server_url.DOMAIN}:${server_url.PORT}/fixtures`
+            `${server_url.URL}/fixtures`
         )
         .then(res => {
             setSchedule([...res.data])

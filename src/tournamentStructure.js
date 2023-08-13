@@ -8,7 +8,7 @@ import { server_url } from './globals'
 
 export function resetTournament(data){
     console.log('resetting')
-     return axios.put(`${server_url.DOMAIN}:${server_url.PORT}/tournament`, data)
+     return axios.put(`${server_url.URL}/tournament`, data)
 }
 
 
@@ -285,10 +285,10 @@ export default function TournamentSetup(){
 
         console.log(slot_data)
 
-        axios.post(`${server_url.DOMAIN}:${server_url.PORT}/schedule_load`, slot_data)
+        axios.post(`${server_url.URL}/schedule_load`, slot_data)
             .then(res => {
                 console.log(res);
-                axios.post(`${server_url.DOMAIN}:${server_url.PORT}/schedule_start`)
+                axios.post(`${server_url.URL}/schedule_start`)
                     .then(res => {
                         alert('Tournament has been set up!');
                         // PLEASE UNCOMMENT!

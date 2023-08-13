@@ -138,7 +138,7 @@ export default function Standings(){
 
     useEffect(() => {
         axios.get(
-            `${server_url.DOMAIN}:${server_url.PORT}/standings`
+            `${server_url.URL}/standings`
         )
         .then(res => {
             console.log('fetched')

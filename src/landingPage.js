@@ -12,7 +12,7 @@ import { getImage, getTeamLogo } from './globals';
 export function LandingCard({value}){
     const navigate = useNavigate();
     return <Grid item xs={6} padding={2}>
-                <div style={{width:'100%',aspectRatio:1, color: 'black',backgroundColor: 1 ? 'white' : 'rgb(227, 109, 172)', background: 'linear-gradient(120deg, white 40%, rgb(227, 109, 172) 70%)', borderRadius:'20px', border:'2px solid black', boxShadow:'10px 10px rgb(28, 147, 214)'}}>
+                <div style={{width:'100%',aspectRatio:1, color: 'black',backgroundColor: 1 ? 'white' : 'rgb(227, 109, 172)', background: 'linear-gradient(120deg, white 0%, rgb(227, 109, 172) 70%)', borderRadius:'20px', border:'2px solid black', boxShadow:'10px 10px rgb(28, 147, 214)'}}>
                     <div className='centered' onClick={()=>{navigate(value.href)}} style={{height:'100%'}}>
                         {value.title}
                     </div>

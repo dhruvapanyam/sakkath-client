@@ -17,7 +17,7 @@ export default function LoginPage(){
 
     function login(username, password, navigate_to){
         axios.post(
-            `${server_url.DOMAIN}:${server_url.PORT}/signin`,
+            `${server_url.URL}/signin`,
             {
                 username,
                 password

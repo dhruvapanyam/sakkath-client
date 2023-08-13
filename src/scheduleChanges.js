@@ -24,7 +24,7 @@ export default function ScheduleChanges(){
 
     useEffect(() => {
 
-        axios.get(`${server_url.DOMAIN}:${server_url.PORT}/fixtures`)
+        axios.get(`${server_url.URL}/fixtures`)
             .then(res => {
                 // console.log(res.data)
                 let dict = {};
@@ -39,7 +39,7 @@ export default function ScheduleChanges(){
                 setMatchDict({...dict});
             })
         
-        axios.get(`${server_url.DOMAIN}:${server_url.PORT}/timeslots`)
+        axios.get(`${server_url.URL}/timeslots`)
             .then(res => {
                 // console.log(res)
                 setTimeSlots(res.data);
@@ -85,7 +85,7 @@ export default function ScheduleChanges(){
 
         // console.log(slot_data)
         if(slot_data.length){
-            axios.post(`${server_url.DOMAIN}:${server_url.PORT}/schedule_change`, slot_data)
+            axios.post(`${server_url.URL}/schedule_change`, slot_data)
                 .then(res => {
                     alert('Changed schedule!');
                 })
@@ -111,7 +111,7 @@ export default function ScheduleChanges(){
 
         // console.log(num_changed,'changed');
         if(Object.keys(changed_times).length){
-            axios.post(`${server_url.DOMAIN}:${server_url.PORT}/timeslots_change`, changed_times)
+            axios.post(`${server_url.URL}/timeslots_change`, changed_times)
                 .then(res => {
                     alert('Changed timeslots!');
                 })

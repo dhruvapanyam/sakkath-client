@@ -26,7 +26,7 @@ export function login(){
     // if(password === null) return;
 
     axios.post(
-        `${server_url.DOMAIN}:${server_url.PORT}/signin`,
+        `${server_url.URL}/signin`,
         {
             username,
             password: username // temporary
@@ -48,7 +48,7 @@ export function login(){
 }
 
 export function logout(){
-    axios.post(`${server_url.DOMAIN}:${server_url.PORT}/signout`)
+    axios.post(`${server_url.URL}/signout`)
     .then(res => {handleSignOut();window.location.reload()})
     .catch(console.log)
 }
