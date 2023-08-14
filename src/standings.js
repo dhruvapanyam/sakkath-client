@@ -99,7 +99,7 @@ function BracketTable({table, teams, stage_status}){
     </Stack>
 
 
-    return <div style={{color:'white', marginTop: '20px'}}>
+    return <div style={{color:'white', marginTop: '20px', marginBottom:'20px'}}>
         {table_dom}
     </div>
 

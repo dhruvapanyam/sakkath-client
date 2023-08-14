@@ -11,8 +11,31 @@ import Modal from '@mui/material/Modal';
 import {ButtonTabs, SlotFixtures, TeamDisplay} from './schedule'
 import { handleError } from './utils/axios';
 
+import {spirit_questions} from './globals'
+
 
 function TeamOverview({teamData}){
+    const [open, setOpen] = React.useState(false);
+    const handleOpen = () => {
+        setOpen(true);
+        // setTimeout(() => {
+        //     handleClose();
+        //     // alert('Congrats!')
+        // }, Math.random() * 100)
+    }
+    const handleClose = () => setOpen(false);
+    const style = {
+        position: 'absolute',
+        top: '50%',
+        left: '50%',
+        transform: 'translate(-50%, -50%)',
+        width: '60%',
+        bgcolor: 'beige',
+        border: '2px solid #000',
+        boxShadow: 24,
+        p: 4,
+        fontFamily: 'Poppins',
+    };
     // console.log(teamData)
     // console.log(teamData)
     const logo = getTeamLogo(teamData?.team_data?.logo)
@@ -26,10 +49,17 @@ function TeamOverview({teamData}){
     var form_symbols = recent_record.join('').padEnd(7, 'U').split('');
     console.log(form_symbols);;
 
+    var player_list = teamData?.team_data?.roster || [];
+    player_list.sort((p1,p2) => (p1.toLowerCase() > p2.toLowerCase()) ? 1 : -1)
+    player_list = player_list.map(p => {
+        return p.slice(0,1).toUpperCase() + p.slice(1)
+    })
+
+
 
     return <Grid container padding={1} spacing={0} sx={{marginTop: '58px', color:'white', backgroundColor:'rgb(20,20,20)'}}>
         <Grid item sx={{border:'', width:'40%', padding:'10px',}}>
-            <Box component={'img'} sx={{width: '100%',aspectRatio:'1', borderRadius:'50%', border:'2px solid grey'}} src={logo}></Box>
+            <Box onClick={handleOpen} component={'img'} sx={{width: '100%',aspectRatio:'1', borderRadius:'50%', border:'2px solid grey'}} src={logo}></Box>
         </Grid>
         <Grid item sx={{border:'', width:'60%'}}>
             <Box className='centered' sx={{flexDirection:'column', height: '100%'}}>
@@ -37,15 +67,41 @@ function TeamOverview({teamData}){
                 <div style={{fontSize:'13px', fontWeight:200}}>
                     {teamData?.team_data?.division}: {teamData?.team_data?.current_stage_id?.stage_name}: Rank {teamData?.team_data?.stage_rank+1}
                 </div>
-                <br></br>
-                <div style={{fontSize:'13px', fontWeight:200}}>Record</div>
+                {/* <br></br> */}
+                <div style={{fontSize:'13px', fontWeight:200, marginTop:10}}>Record</div>
                 <div style={{display:'flex', flexDirection:'row'}}>
                     {form_symbols.map((c,i) => {
                         return <div key={i} style={{backgroundColor: form_colors[c], borderRadius: '50%', height: '8px',width:'8px', margin:'1px'}}></div>
                     })}
                 </div>
+                <div onClick={handleOpen} style={{border: '1px solid pink', padding: '5px 10px 5px 10px', marginTop:15, fontSize:13, fontWeight:300, borderRadius:10}}> View Roster </div>
             </Box>
         </Grid>
+
+        <Modal
+              open={open}
+              onClose={handleClose}
+              aria-labelledby="modal-modal-title"
+              aria-describedby="modal-modal-description"
+              onClick={handleClose}
+
+            >
+              <Box sx={style}>
+                <Typography sx={{fontWeight:700, fontSize:18, fontFamily:'Poppins'}} id="modal-modal-title" variant="h6" component="h2">
+                  Team Roster
+                </Typography>
+                <Stack padding={0} paddingTop={3} spacing={0}>
+                    {/* <ol> */}
+                    {player_list.map((player, i) => {
+                        return <div key={i} style={{fontSize:14}}>{i+1}. {player}</div>
+                    })}
+                    {/* </ol> */}
+                    <br></br>
+                    {/* <br></br> */}
+                    <div className='centered' style={{fontSize:10,fontWeight:200}}>(Click to close)</div>
+                </Stack>
+              </Box>
+        </Modal>
     </Grid>
 
     // return (<>
@@ -137,12 +193,16 @@ function TeamResults({results, id, own_team=false}){
         top: '50%',
         left: '50%',
         transform: 'translate(-50%, -50%)',
-        width: '60%',
+        width: '70%',
         bgcolor: 'beige',
         border: '2px solid #000',
         boxShadow: 24,
         p: 4,
         fontFamily: 'Poppins',
+        height: '60vh',
+        overflow: 'scroll',
+        // paddingTop: '10px',
+        // paddingBottom: '10px'
     };
     
 
@@ -161,8 +221,8 @@ function TeamResults({results, id, own_team=false}){
         if(results.length === 0) return []
         let res = results[openResult];
         if(res.team_1._id === id)
-            return res.team_2.roster;
-        return res.team_1.roster
+            return res.team_2;
+        return res.team_1
     }
 
     const submitSpiritScore = () => {
@@ -170,16 +230,24 @@ function TeamResults({results, id, own_team=false}){
         let msp = document.getElementById(`${openResult}-msp`).value;
         let comments = document.getElementById(`${openResult}-comments`).value;
 
-        let s1 = [`${openResult}-spirit_1-1`,`${openResult}-spirit_1-2`,`${openResult}-spirit_1-3`,`${openResult}-spirit_1-4`,`${openResult}-spirit_1-5`].map(id => document.getElementById(id)?.value || 0).map(x=>parseInt(x));
-        let s2 = [`${openResult}-spirit_2-1`,`${openResult}-spirit_2-2`,`${openResult}-spirit_2-3`,`${openResult}-spirit_2-4`,`${openResult}-spirit_2-5`].map(id => document.getElementById(id)?.value || 0).map(x=>parseInt(x));
+        let question_radio_btns = Array.from(document.getElementsByClassName('spirit-question'));
+        var answers = {};
 
-        console.log(s1, s2, mvp, msp, comments)
+        question_radio_btns.forEach(q => {
+            console.log(q, q.checked)
+            if(!q.checked) return;
+            answers[q.name] = q.value;
+        })
+
+        console.log(answers)
+
+        return;
 
         axios.post(
             `${server_url.URL}/spirit_score/${results[openResult]._id}`,
             {
-                spirit_score_1: s1,
-                spirit_score_2: s2,
+                // spirit_score_1: s1,
+                // spirit_score_2: s2,
                 mvp,
                 msp,
                 comments
@@ -221,11 +289,11 @@ function TeamResults({results, id, own_team=false}){
                 const max_team_name_length = 15;
                 let team_1_name = result.team_1.team_name;
                 if(team_1_name.length > max_team_name_length){
-                    team_1_name = team_1_name.slice(0,max_team_name_length) + '...'
+                    result.team_1.team_name = team_1_name.slice(0,max_team_name_length) + '...'
                 }
                 let team_2_name = result.team_2.team_name;
                 if(team_2_name.length > max_team_name_length){
-                    team_2_name = team_2_name.slice(0,max_team_name_length) + '...'
+                    result.team_2.team_name = team_2_name.slice(0,max_team_name_length) + '...'
                 }
 
                 var my_team, opp_team, my_score, opp_score;
@@ -307,16 +375,16 @@ function TeamResults({results, id, own_team=false}){
         </Stack>
         <Modal
               open={open}
-              onClose={()=>{handleClose()}}
+            //   onClose={()=>{handleClose()}}
               aria-labelledby="modal-modal-title"
               aria-describedby="modal-modal-description"
 
             >
               <Box sx={style}>
                 <Typography sx={{fontWeight:700, fontSize:15, fontFamily:'Poppins'}} id="modal-modal-title" variant="h6" component="h2">
-                  Submit Spirit Scores [Match #{results[openResult]?.match_number}]
+                  Submit Spirit Scores [{oppRoster().team_name}]
                 </Typography>
-                <Stack padding={3} spacing={1}>
+                {/* <Stack padding={0} paddingTop={3} spacing={1}>
                     <Grid container>
                         <Grid item xs={9}>
                             <TeamDisplay team_name={results[openResult]?.team_1?.team_name} logo={results[openResult]?.team_1?.logo} logo_size={20} team_name_size={12}></TeamDisplay>
@@ -392,7 +460,83 @@ function TeamResults({results, id, own_team=false}){
                             </div>
                         </Grid>
                     </Grid>
-                </Stack>                
+                </Stack>                 */}
+
+                <Stack sx={{fontSize:14}}>
+                <Grid container paddingTop={2}>
+                        <Grid item xs={6}>
+                            Sakkath Player:
+                        </Grid>
+                        <Grid item xs={6}>
+                        <div className='centered' style={{height:'100%', width:'100%'}}>
+                                <select id={`${openResult}-mvp`}>
+                                    <option value={'N/A'}>-</option>
+                                    {(oppRoster()?.roster || []).map((player,i) => {
+                                        return <option key={i} value={player}>{player}</option>
+                                    })}
+                                </select>
+                            </div>
+                        </Grid>
+                    </Grid>
+                    <Grid container>
+                        <Grid item xs={6}>
+                            Super Spirited Player:
+                        </Grid>
+                        <Grid item xs={6}>
+                        <div className='centered' style={{height:'100%', width:'100%'}}>
+                                <select id={`${openResult}-msp`}>
+                                    <option value={'N/A'}>-</option>
+                                    {(oppRoster()?.roster || []).map((player,i) => {
+                                        return <option key={i} value={player}>{player}</option>
+                                    })}
+                                </select>
+                            </div>
+                        </Grid>
+                    </Grid>
+                    <br></br>
+                    <br></br>
+                    
+                    {spirit_questions.map((question, i) => {
+
+                        return <div key={i} style={{marginBottom:'16px'}}>
+                            <div style={{fontSize:15, marginBottom:'12px'}}>{i+1}. {question.question}</div>
+                            {question.options.map((option, j) => {
+
+                                return <Grid container key={j} sx={{marginBottom:'10px'}}>
+                                        <Grid item xs={2}>
+                                            <div><input className='spirit-question' type='radio' value={j} name={`spirit-question-${i+1}`}></input></div>
+                                        </Grid>
+                                        <Grid item xs={10}>
+                                            <div style={{fontSize:15, fontWeight:300, lineHeight:1.4}}>
+                                                {option}
+                                            </div>
+                                        </Grid>
+                                    </Grid>
+                            })}
+                        </div>
+                    })}
+                    <Grid container paddingTop={2}>
+                        <Grid item xs={5}>
+                            Comments:
+                        </Grid>
+                        <Grid item xs={7}>
+                        <div className='centered' style={{height:'100%'}}>
+                                <textarea id={`${openResult}-comments`}></textarea>
+                            </div>
+                        </Grid>
+                    </Grid>
+                    <br></br>
+                    <Grid container paddingTop={2}>
+                        <Grid item xs={12}>
+                            <div className='centered' style={{height:'100%'}}>
+                                <Button onClick={submitSpiritScore} variant='contained'>submit</Button>
+                                <Button onClick={handleClose} variant='outlined' sx={{marginLeft:'20px'}}>close</Button>
+                            </div>
+                        </Grid>
+                    </Grid>
+                </Stack>
+
+
               </Box>
             </Modal>
     </div>

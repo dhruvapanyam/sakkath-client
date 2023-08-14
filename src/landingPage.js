@@ -12,7 +12,8 @@ import { getImage, getTeamLogo } from './globals';
 export function LandingCard({value}){
     const navigate = useNavigate();
     return <Grid item xs={6} padding={2}>
-                <div style={{width:'100%',aspectRatio:1, color: 'black',backgroundColor: 1 ? 'white' : 'rgb(227, 109, 172)', background: 'linear-gradient(120deg, white 0%, rgb(227, 109, 172) 70%)', borderRadius:'20px', border:'2px solid black', boxShadow:'10px 10px rgb(28, 147, 214)'}}>
+                <div style={{width:'100%', aspectRatio:1, color: 'black',backgroundColor: 1 ? 'white' : 'rgb(227, 109, 172)', background: 'linear-gradient(120deg, white 0%, rgb(227, 109, 172) 70%)', borderRadius:'20px', border:'2px solid black', boxShadow:'10px 10px rgb(28, 147, 214)'}}>
+                {/* <div style={{width:'100%', aspectRatio:1, color: 'black',backgroundColor: 1 ? 'white' : 'rgb(227, 109, 172)', background: 'linear-gradient(120deg, white 0%, rgb(245, 188, 224) 0%)', borderRadius:'20px', border:'2px solid black', boxShadow:'10px 10px rgb(100, 163, 189)'}}> */}
                     <div className='centered' onClick={()=>{navigate(value.href)}} style={{height:'100%'}}>
                         {value.title}
                     </div>
@@ -20,11 +21,29 @@ export function LandingCard({value}){
             </Grid>
 }
 
+function SponsorBand(){
+
+    return <Grid container sx={{backgroundColor:'white'}}>
+        <Grid item xs={3}>
+            <div className='centered sponsor-img-div'><img className='sponsor-img' src={getImage('sponsors/peak.jpeg')}></img></div>
+        </Grid>
+        <Grid item xs={3}>
+            <div className='centered sponsor-img-div'><img className='sponsor-img' src={getImage('sponsors/gatorade.jpeg')}></img></div>
+        </Grid>
+        <Grid item xs={3}>
+            <div className='centered sponsor-img-div'><img className='sponsor-img' src={getImage('sponsors/urbanwear.jpeg')}></img></div>
+        </Grid>
+        <Grid item xs={3}>
+            <div className='centered sponsor-img-div'><img className='sponsor-img' style={{width: '80%'}} src={getImage('sponsors/decathlon.jpeg')}></img></div>
+        </Grid>
+    </Grid>
+}
+
 export default function LandingPage({admin}){
 
 
     let views = [{
-            title:"Fixtures",
+            title:"Schedule",
             href:"/schedule"
         },
         {
@@ -32,12 +51,12 @@ export default function LandingPage({admin}){
             href:"/standings"
         },
         {
-            title:"Format",
+            title:"Rules",
             href:""
         },
         {
             title:"Venue",
-            href:""
+            href:"/venue"
         },
     ]
 
@@ -56,5 +75,8 @@ export default function LandingPage({admin}){
             })}
             
         </Grid>
+        <br></br>
+        <br></br>
+        <SponsorBand></SponsorBand>
     </div>
 }

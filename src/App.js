@@ -18,6 +18,7 @@ import TournamentSetup from './tournamentStructure';
 import ScheduleChanges from './scheduleChanges';
 import InfoView from './info';
 import LoginPage from './login';
+import Venue from './venue';
 
 export function login(){
     const username = window.prompt("Enter username");
@@ -94,6 +95,7 @@ function App() {
           <Route path='/schedule' element={<Schedule></Schedule>}></Route>
           <Route path='/info' element={<InfoView></InfoView>}></Route>
           <Route path='/login' element={<LoginPage/>}></Route>
+          <Route path='/venue' element={<Venue/>}></Route>
 
 
           { admin && <Route path='/admin' element={<AdminView></AdminView>}></Route> }
