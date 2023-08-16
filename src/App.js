@@ -82,7 +82,7 @@ function App() {
 
   let admin = localStorage.getItem('my_role') === 'admin';
 
-  // console.log('Welcome to the Sakkath app!')
+  console.log('Welcome to the Sakkath app!')
 
   return (
     <>
