@@ -213,7 +213,7 @@ function ScheduleOverview({tables}){
     function scrollToTable(timeslot){
         var myElement = document.getElementById(timeslot);
         if(!myElement) return;
-        console.log('scrolling')
+        // console.log('scrolling')
         // var topPos = myElement.offsetTop;
         // document.getElementById('schedule-container').scrollTop = topPos;
         myElement.scrollIntoView({ behavior: 'smooth' });
@@ -292,7 +292,7 @@ export default function Schedule(){
             setDataLoaded(true);
         })
         .catch(err => {
-            console.log(err)
+            // console.log(err)
         })
 
     }, [])

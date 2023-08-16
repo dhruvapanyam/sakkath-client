@@ -24,18 +24,23 @@ export function LandingCard({value}){
 function SponsorBand(){
 
     return <Grid container sx={{backgroundColor:'white'}}>
-        <Grid item xs={3}>
-            <div className='centered sponsor-img-div'><img className='sponsor-img' src={getImage('sponsors/peak.jpeg')}></img></div>
-        </Grid>
-        <Grid item xs={3}>
-            <div className='centered sponsor-img-div'><img className='sponsor-img' src={getImage('sponsors/gatorade.jpeg')}></img></div>
-        </Grid>
-        <Grid item xs={3}>
-            <div className='centered sponsor-img-div'><img className='sponsor-img' src={getImage('sponsors/urbanwear.jpeg')}></img></div>
-        </Grid>
-        <Grid item xs={3}>
+        <Grid item sx={{width:'20%'}}>
             <div className='centered sponsor-img-div'><img className='sponsor-img' style={{width: '80%'}} src={getImage('sponsors/decathlon.jpeg')}></img></div>
         </Grid>
+        <Grid item sx={{width:'20%'}}>
+            <div className='centered sponsor-img-div'><img className='sponsor-img' src={getImage('sponsors/gatorade.jpeg')}></img></div>
+        </Grid>
+        <Grid item sx={{width:'20%'}}>
+            <div className='centered sponsor-img-div'><img className='sponsor-img' src={getImage('sponsors/offseason.png')}></img></div>
+        </Grid>
+        <Grid item sx={{width:'20%'}}>
+            <div className='centered sponsor-img-div'><img className='sponsor-img' src={getImage('sponsors/peak.jpeg')}></img></div>
+        </Grid>
+        <Grid item sx={{width:'20%'}}>
+            <div className='centered sponsor-img-div'><img className='sponsor-img' src={getImage('sponsors/urbanwear.jpeg')}></img></div>
+        </Grid>
+        
+        
     </Grid>
 }
 
@@ -52,7 +57,7 @@ export default function LandingPage({admin}){
         },
         {
             title:"Rules",
-            href:""
+            href:"/rules"
         },
         {
             title:"Venue",
@@ -68,7 +73,7 @@ export default function LandingPage({admin}){
     )
 
     return <div style={{marginTop:70}}>
-        <img src={getImage('white_logo.png')} style={{width:'100%'}}></img>
+        <img src={getImage('white_logo.png')} style={{width:'80%', marginLeft:'10%'}}></img>
         <Grid container paddingRight={2}>
             {views.map((val,i) => {
                 return <LandingCard key={i} value={val}></LandingCard>

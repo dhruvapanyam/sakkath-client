@@ -47,7 +47,7 @@ function TeamOverview({teamData}){
     // recent_record = [true,false,true]
     const form_colors = {'U': 'white', 'W': 'green', 'L': 'red', 'D': 'grey'}
     var form_symbols = recent_record.join('').padEnd(7, 'U').split('');
-    console.log(form_symbols);;
+    // console.log(form_symbols);;
 
     var player_list = teamData?.team_data?.roster || [];
     player_list.sort((p1,p2) => (p1.toLowerCase() > p2.toLowerCase()) ? 1 : -1)
@@ -122,7 +122,7 @@ function TeamOverview({teamData}){
 
 function TeamUpcoming({id, teamInfo}){
     let fixture = teamInfo?.upcoming;
-    console.log('upcoming',fixture)
+    // console.log('upcoming',fixture)
     var fixture_details;
     if(fixture === null){
         let msg = teamInfo?.team_data?.current_stage_id?.type != 'Swiss' ? 'N/A' : `Waiting for results of ${teamInfo?.team_data?.current_stage_id?.stage_name}...`
@@ -136,7 +136,7 @@ function TeamUpcoming({id, teamInfo}){
         <div style={{paddingTop: '5px'}} className='next-fixture-row'><b>{fixture?.start_time} Field-{fixture?.field}</b> | {fixture?.stage?.stage_name}</div>
     </div>
     }
-    console.log('fixture',fixture)
+    // console.log('fixture',fixture)
     const opp = fixture?.team_1?._id === id ? fixture?.team_2 : fixture?.team_1;
 
     let waiting_msg = `Waiting for results of ${teamInfo?.team_data?.current_stage_id?.stage_name}...`;
@@ -232,33 +232,49 @@ function TeamResults({results, id, own_team=false}){
 
         let question_radio_btns = Array.from(document.getElementsByClassName('spirit-question'));
         var answers = {};
+        // console.log(results[openResult])
 
         question_radio_btns.forEach(q => {
-            console.log(q, q.checked)
             if(!q.checked) return;
-            answers[q.name] = q.value;
+            answers[q.name.split('-')[2]] = parseInt(q.value);
         })
 
-        console.log(answers)
+        var spirit_score = [];
+        for(let i=0; i<10; i++){
+            // check if i'th question has been answered
+            if(i in answers == false){
+                alert(`Question ${i+1} has not been answered!`);
+                return;
+            }
+            answers[i] = 1 - answers[i]/(spirit_questions[i].options.length - 1)
+            answers[i] = Math.round(answers[i] * 100) / 100
+            // console.log(i, answers[i])
+            spirit_score.push(answers[i])
+        }
 
-        return;
+        // console.log('Answers:',answers)
+        // console.log('Comments:',comments);
+        // console.log('Sakkath player:',mvp);
+        // console.log('Super Spirited player:',msp);
+
+        // console.log(results[openResult])
+
 
         axios.post(
             `${server_url.URL}/spirit_score/${results[openResult]._id}`,
             {
-                // spirit_score_1: s1,
-                // spirit_score_2: s2,
+                spirit_score,
                 mvp,
                 msp,
                 comments
             }
         )
             .then(res => {
-                console.log('submitted!');
-                window.location.reload();
+                // console.log('submitted!');
+                // window.location.reload();
             })
             .catch(err => {
-                console.log(err.response.data)
+                // console.log(err.response.data)
             })
 
     }
@@ -310,6 +326,15 @@ function TeamResults({results, id, own_team=false}){
                     opp_score = result.result.score_1;
                 }
 
+                let my_spirit_score = (my_team === 'team_1') ? result.spirit.spirit_score_1 : result.spirit.spirit_score_2;
+                let opp_spirit_score = (my_team === 'team_1') ? result.spirit.spirit_score_2 : result.spirit.spirit_score_1;
+
+                let my_spirit_length = my_spirit_score.length;
+                let opp_spirit_length = opp_spirit_score.length;
+
+                my_spirit_score = my_spirit_score.reduce((partialSum, a) => partialSum + a, 0);
+                opp_spirit_score = opp_spirit_score.reduce((partialSum, a) => partialSum + a, 0);
+
                 // return <div><Paper key={i} elevation={16} sx={{backgroundColor: outcome ? 'rgb(124, 176, 114)' : 'rgb(181, 121, 118)', height:'110px'}}>
                 return <div key={i}><Paper key={i} elevation={16} sx={{background: bg_col, boxShadow:`0px 5px ${outcome_colors[outcome]}`}}>
                             <Stack padding={1}>
@@ -329,24 +354,6 @@ function TeamResults({results, id, own_team=false}){
                                         {/* <TeamDisplay team_name={result.team_2.team_name} logo={result.team_2.logo} team_id={result.team_2._id} logo_size={20} team_name_size={12}></TeamDisplay> */}
                                     </Grid>
                                 </Grid>
-                                {/* <hr color='lightgrey' style={{width:'70%', border:'none',height:'1px'}}></hr>
-                                <Grid container>
-                                    <Grid item xs={4}>
-                                        <div style={{float:'right', fontSize:'11px', fontWeight:300}}>
-                                            {result.spirit.spirit_score_1.join(' | ')}
-                                        </div>
-                                    </Grid>
-                                    <Grid item xs={4}>
-                                        <div className='centered' style={{fontSize:'13px'}}>
-                                            SPIRIT
-                                        </div>
-                                    </Grid>
-                                    <Grid item xs={4}>
-                                        <div style={{fontSize:'11px', fontWeight:300}}>
-                                            {result.spirit.spirit_score_2.join(' | ')}
-                                        </div>
-                                    </Grid>
-                                </Grid> */}
                                 <hr color='lightgrey' style={{width:'70%', border:'none',height:'1px'}}></hr>
                                 <Grid container>
                                     <Grid item xs={12}>
@@ -355,6 +362,25 @@ function TeamResults({results, id, own_team=false}){
                                         </div>
                                     </Grid>
                                 </Grid>
+                                {own_team && <Grid container>
+                                <div style={{width:'100%'}}><hr color='lightgrey' style={{width:'70%', border:'none',height:'1px'}}></hr></div>
+                                    <Grid item sx={{width: '30%'}}>
+                                        <div style={{float:'right', display:'flex',alignItems:'center',height:'100%', fontSize:'11px', fontWeight:300}}>
+                                            {my_spirit_score}
+                                        </div>
+                                    </Grid>
+                                    <Grid item sx={{width: '40%'}}>
+                                        <div className='centered' style={{fontSize:'13px'}}>
+                                            SPIRIT SCORE
+                                        </div>
+                                    </Grid>
+                                    <Grid item sx={{width: '30%'}}>
+                                        <div style={{fontSize:'11px', display:'flex',alignItems:'center',height:'100%', fontWeight:300}}>
+                                            {opp_spirit_score}
+                                        </div>
+                                    </Grid>
+                                </Grid>}
+                                
                             </Stack>
                         </Paper>
                                 {own_team && 
@@ -384,83 +410,7 @@ function TeamResults({results, id, own_team=false}){
                 <Typography sx={{fontWeight:700, fontSize:15, fontFamily:'Poppins'}} id="modal-modal-title" variant="h6" component="h2">
                   Submit Spirit Scores [{oppRoster().team_name}]
                 </Typography>
-                {/* <Stack padding={0} paddingTop={3} spacing={1}>
-                    <Grid container>
-                        <Grid item xs={9}>
-                            <TeamDisplay team_name={results[openResult]?.team_1?.team_name} logo={results[openResult]?.team_1?.logo} logo_size={20} team_name_size={12}></TeamDisplay>
-                        </Grid>
-                        <Grid item xs={3}>
-                            <div className='centered' style={{height:'100%'}}>
-                                <input id={`${openResult}-spirit_1-1`} type={'number'} min={0} max={4} defaultValue={2}></input>
-                                <input id={`${openResult}-spirit_1-2`} type={'number'} min={0} max={4} defaultValue={2}></input>
-                                <input id={`${openResult}-spirit_1-3`} type={'number'} min={0} max={4} defaultValue={2}></input>
-                                <input id={`${openResult}-spirit_1-4`} type={'number'} min={0} max={4} defaultValue={2}></input>
-                                <input id={`${openResult}-spirit_1-5`} type={'number'} min={0} max={4} defaultValue={2}></input>
-                            </div>
-                        </Grid>
-                    </Grid>
-                    <Grid container>
-                        <Grid item xs={9}>
-                            <TeamDisplay team_name={results[openResult]?.team_2?.team_name} logo={results[openResult]?.team_2?.logo} logo_size={20} team_name_size={12}></TeamDisplay>
-                        </Grid>
-                        <Grid item xs={3}>
-                        <div className='centered' style={{height:'100%'}}>
-                                <input id={`${openResult}-spirit_2-1`} type={'number'} min={0} max={4} defaultValue={2}></input>
-                                <input id={`${openResult}-spirit_2-2`} type={'number'} min={0} max={4} defaultValue={2}></input>
-                                <input id={`${openResult}-spirit_2-3`} type={'number'} min={0} max={4} defaultValue={2}></input>
-                                <input id={`${openResult}-spirit_2-4`} type={'number'} min={0} max={4} defaultValue={2}></input>
-                                <input id={`${openResult}-spirit_2-5`} type={'number'} min={0} max={4} defaultValue={2}></input>
-                            </div>
-                        </Grid>
-                    </Grid>
-                    <Grid container paddingTop={2}>
-                        <Grid item xs={9}>
-                            MVP:
-                        </Grid>
-                        <Grid item xs={3}>
-                        <div className='centered' style={{height:'100%'}}>
-                                <select id={`${openResult}-mvp`}>
-                                    <option value={'N/A'}>-</option>
-                                    {oppRoster().map((player,i) => {
-                                        return <option key={i} value={player}>{player}</option>
-                                    })}
-                                </select>
-                            </div>
-                        </Grid>
-                    </Grid>
-                    <Grid container>
-                        <Grid item xs={9}>
-                            MSP:
-                        </Grid>
-                        <Grid item xs={3}>
-                        <div className='centered' style={{height:'100%'}}>
-                                <select id={`${openResult}-msp`}>
-                                    <option value={'N/A'}>-</option>
-                                    {oppRoster().map((player,i) => {
-                                        return <option key={i} value={player}>{player}</option>
-                                    })}
-                                </select>
-                            </div>
-                        </Grid>
-                    </Grid>
-                    <Grid container paddingTop={2}>
-                        <Grid item xs={4}>
-                            Comments:
-                        </Grid>
-                        <Grid item xs={8}>
-                        <div className='centered' style={{height:'100%'}}>
-                                <textarea id={`${openResult}-comments`}></textarea>
-                            </div>
-                        </Grid>
-                    </Grid>
-                    <Grid container paddingTop={2}>
-                        <Grid item xs={12}>
-                            <div className='centered' style={{height:'100%'}}>
-                                <Button onClick={submitSpiritScore} variant='contained'>submit</Button>
-                            </div>
-                        </Grid>
-                    </Grid>
-                </Stack>                 */}
+                
 
                 <Stack sx={{fontSize:14}}>
                 <Grid container paddingTop={2}>
@@ -504,7 +454,7 @@ function TeamResults({results, id, own_team=false}){
 
                                 return <Grid container key={j} sx={{marginBottom:'10px'}}>
                                         <Grid item xs={2}>
-                                            <div><input className='spirit-question' type='radio' value={j} name={`spirit-question-${i+1}`}></input></div>
+                                            <div><input className='spirit-question' type='radio' value={j} name={`spirit-question-${i}`}></input></div>
                                         </Grid>
                                         <Grid item xs={10}>
                                             <div style={{fontSize:15, fontWeight:300, lineHeight:1.4}}>
@@ -590,7 +540,7 @@ function PendingMatch({match, id}){
     function submitScore(){
         let s1 = document.getElementById('submit-score-team_1')?.value;
         let s2 = document.getElementById('submit-score-team_2')?.value;
-        console.log(s1,s2)
+        // console.log(s1,s2)
 
         axios.post(
             `${server_url.URL}/result/${match._id}`,
@@ -603,7 +553,7 @@ function PendingMatch({match, id}){
             }
         )
             .then(res => {
-                console.log('success!');
+                // console.log('success!');
                 window.location.reload();
             })
             .catch(handleError)
@@ -726,26 +676,26 @@ export default function TeamDetails(){
 
 
     useEffect(() => {
-        console.log('using effect')
+        // console.log('using effect')
         axios.get(
             `${server_url.URL}/team_results/${id}`
         )
         .then(res => {
-            console.log('results')
-            console.log(res.data)
+            // console.log('results')
+            // console.log(res.data)
             // console.log(res.data.upcoming)
             setTeamResults({...res.data})
         })
     }, [id])
 
     useEffect(() => {
-        console.log('using effect')
+        // console.log('using effect')
         axios.get(
             `${server_url.URL}/team_info/${id}`
         )
         .then(res => {
-            console.log('info')
-            console.log(res.data)
+            // console.log('info')
+            // console.log(res.data)
             // console.log(res.data.upcoming)
             setTeamInfo({...res.data})
         })

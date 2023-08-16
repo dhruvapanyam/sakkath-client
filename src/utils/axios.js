@@ -1,7 +1,7 @@
 import axios from "axios";
 
 function setToken(token){
-    console.log(token);
+    // console.log(token);
     if(!token) return;
     localStorage.setItem('jwt_token',token);
     axios.defaults.headers.common['x-auth-token'] = token;

@@ -7,7 +7,7 @@ import { server_url } from './globals'
 
 
 export function resetTournament(data){
-    console.log('resetting')
+    // console.log('resetting')
      return axios.put(`${server_url.URL}/tournament`, data)
 }
 
@@ -283,11 +283,11 @@ export default function TournamentSetup(){
             }
         })
 
-        console.log(slot_data)
+        // console.log(slot_data)
 
         axios.post(`${server_url.URL}/schedule_load`, slot_data)
             .then(res => {
-                console.log(res);
+                // console.log(res);
                 axios.post(`${server_url.URL}/schedule_start`)
                     .then(res => {
                         alert('Tournament has been set up!');
@@ -295,11 +295,11 @@ export default function TournamentSetup(){
                         // navigate('/')
                     })
                     .catch(err => {
-                        console.log(err)
+                        // console.log(err)
                     })
             })
             .catch(err => {
-                console.log(err?.response?.data)
+                // console.log(err?.response?.data)
             })
 
     }
@@ -316,12 +316,12 @@ export default function TournamentSetup(){
                 "Women's": params['Women\'s'].pools.slice(0,params['Women\'s'].num_pools).map(s => {return s.split(',')}),
             }
         }
-        console.log(data)
+        // console.log(data)
         // resetTournament()
 
         resetTournament(data)
             .then(res => {
-                console.log('successful reset');
+                // console.log('successful reset');
                 checkScheduleCompatibility();
             })
             .catch(err => {
@@ -349,7 +349,7 @@ export default function TournamentSetup(){
         if(!validated) return;
         validated = window.confirm('Are you absolutely sure you want to reset all the tournament data?');
         if(!validated) return;
-        console.log('continuing')
+        // console.log('continuing')
         validateParams();
     }}>check params</button>
     </div>

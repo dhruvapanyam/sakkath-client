@@ -11,14 +11,14 @@ import {ButtonTabs, SlotFixtures, TeamDisplay} from './schedule'
 
 
 function SwissPointsTable({table, teams, stage_status, division, round}){
-    console.log(table.map(x => {return {...x, team: teams[x.team_id]?.logo}}));
+    // console.log(table.map(x => {return {...x, team: teams[x.team_id]?.logo}}));
     table = table.map(x => {return {...x, team_name: teams[x.team_id]?.team_name, logo: teams[x.team_id]?.logo}})
 
     let status_dom = <div style={{textAlign:'center'}}>{stage_status === 'live' ? 'Ongoing' : (stage_status === 'pending' ? 'Pending' : 'Completed')} Round</div>
 
 
     let bg_col = get_left_color(division, round[0]) || 'rgb(177, 211, 222)';
-    console.log(division, round)
+    // console.log(division, round)
 
     let table_dom = <Stack spacing='0' padding={2}>
         <Grid container padding={0} sx={{fontSize: 10, paddingBottom:'5px'}}>
@@ -67,7 +67,7 @@ function SwissPointsTable({table, teams, stage_status, division, round}){
 }
 
 function BracketTable({table, teams, stage_status}){
-    console.log(table.map(x => {return {...x, team: teams[x.team_id]?.logo}}));
+    // console.log(table.map(x => {return {...x, team: teams[x.team_id]?.logo}}));
     table = table.map(x => {return {...x, team_name: teams[x.team_id]?.team_name, logo: teams[x.team_id]?.logo}})
 
     let status_dom = <div style={{textAlign:'center'}}>{stage_status === 'live' ? 'Ongoing' : (stage_status === 'pending' ? 'Pending' : 'Completed')} Round</div>
@@ -141,7 +141,7 @@ export default function Standings(){
             `${server_url.URL}/standings`
         )
         .then(res => {
-            console.log('fetched')
+            // console.log('fetched')
             setStandings({...res.data.standings});
             let team_dict = {}
             for(let team of res.data.teams){
@@ -151,8 +151,8 @@ export default function Standings(){
             // setStandings({...res.data.standings});
             // setFixtures([...res.data.fixtures]);
 
-            console.log('fetched')
-            console.log(res.data)
+            // console.log('fetched')
+            // console.log(res.data)
             // setActivePool('Swiss-A');
             // setActiveRound('O-SAR1');
 
@@ -160,7 +160,7 @@ export default function Standings(){
             setDataLoaded(true);
         })
         .catch(err => {
-            console.log(err)
+            // console.log(err)
         })
     }, [])
 
@@ -250,7 +250,7 @@ export default function Standings(){
         if(activePool in standings[activeDivision]){
             round_tabs = Object.keys(standings[activeDivision][activePool])
             if(activeRound in standings[activeDivision][activePool]){
-                console.log(standings[activeDivision][activePool][activeRound])
+                // console.log(standings[activeDivision][activePool][activeRound])
                 table = standings[activeDivision][activePool][activeRound]?.info?.table;
                 table_type = standings[activeDivision][activePool][activeRound]?.info?.type;
                 stage_status = standings[activeDivision][activePool][activeRound]?.info?.status;
@@ -264,7 +264,7 @@ export default function Standings(){
 
     // console.log(sub_fixtures)
 
-    console.log('table type',table_type)
+    // console.log('table type',table_type)
 
 
     if(!dataLoaded){

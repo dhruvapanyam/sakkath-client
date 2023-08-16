@@ -19,6 +19,7 @@ import ScheduleChanges from './scheduleChanges';
 import InfoView from './info';
 import LoginPage from './login';
 import Venue from './venue';
+import RulesFormat from './rules';
 
 export function login(){
     const username = window.prompt("Enter username");
@@ -34,12 +35,12 @@ export function login(){
         }
     )
     .then(res => {
-        console.log(res.data);
+        // console.log(res.data);
         handleSignIn(res.data);
         window.location.reload();
     })
     .catch(err => {
-        console.log(err.response.data)
+        // console.log(err.response.data)
         if(err.response.data?.expired){
             handleSignOut();
         }
@@ -51,7 +52,9 @@ export function login(){
 export function logout(){
     axios.post(`${server_url.URL}/signout`)
     .then(res => {handleSignOut();window.location.reload()})
-    .catch(console.log)
+    .catch(
+      // console.log
+      )
 }
 
 
@@ -60,7 +63,7 @@ function App() {
   loadTokenHeader();
 
   function phoneify(){
-    console.log(window.innerWidth, window.innerHeight);
+    // console.log(window.innerWidth, window.innerHeight);
     if(window.innerWidth / window.innerHeight <= 0.6) return;
     // target AspectRatio = 3:4
     let margins = window.innerWidth - window.innerHeight * 0.6;
@@ -69,7 +72,7 @@ function App() {
     document.body.style.marginRight = `${margins/2}px`;
     document.getElementById('navbar').style.width = `${document.body.clientWidth}px`;
 
-    console.log(document.body.clientWidth)
+    // console.log(document.body.clientWidth)
   }
   useEffect(() => {
     phoneify();
@@ -79,7 +82,7 @@ function App() {
 
   let admin = localStorage.getItem('my_role') === 'admin';
 
-  console.log('Welcome to the Sakkath app!')
+  // console.log('Welcome to the Sakkath app!')
 
   return (
     <>
@@ -98,6 +101,7 @@ function App() {
           <Route path='/info' element={<InfoView></InfoView>}></Route>
           <Route path='/login' element={<LoginPage/>}></Route>
           <Route path='/venue' element={<Venue/>}></Route>
+          <Route path='/rules' element={<RulesFormat/>}></Route>
 
 
           { admin && <Route path='/admin' element={<AdminView></AdminView>}></Route> }

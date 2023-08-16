@@ -62,14 +62,14 @@ export default function ScheduleChanges(){
             }
         }
         // console.log(matchDict)
-        console.log(changed)
+        // console.log(changed)
         return changed
     }
 
     function changeSchedule(){
         let changed = getScheduleChanges();
         changed.forEach(x => {
-            console.log(matchDict[x]);
+            // console.log(matchDict[x]);
         })
 
         let slot_data = changed.map((mnum,i) => {

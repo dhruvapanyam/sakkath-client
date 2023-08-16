@@ -7,14 +7,18 @@ import { Grid, Typography, ButtonBase, Stack, Divider, Box, IconButton, Tab, Tab
 import {Paper} from '@mui/material';
 
 export default function Venue(){
-    let img_height = window.innerHeight - 60;
+    let img_height = window.innerHeight - 140;
     return <div>
+        <div style={{marginTop: '80px', marginBottom: '20px'}} className='centered'>
+            <a style={{color: 'lightblue'}} href='https://goo.gl/maps/NLuH5CSeHJNEPcKw5'>Google Maps Link</a>
+        </div>
         <Grid container>
             <Grid item xs={12}>
                 <div className='centered' style={{width:'100%',height:`${img_height}px`}}>
-                    <img src={getImage('venue.jpg')} style={{height:'100%',paddingTop:'110px'}}></img>
+                    <img src={getImage('gopalan.png')} style={{height:'100%'}}></img>
                 </div>
             </Grid>
         </Grid>
+        
     </div>
 }

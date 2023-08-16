@@ -24,7 +24,7 @@ export default function LoginPage(){
             }
         )
         .then(res => {
-            console.log(res.data);
+            // console.log(res.data);
             handleSignIn(res.data);
             // window.location.reload();
             navigate('/')
@@ -32,7 +32,7 @@ export default function LoginPage(){
         })
         .catch(err => {
             setIncorrect(true);
-            console.log(err.response.data)
+            // console.log(err.response.data)
             if(err.response.data?.expired){
                 handleSignOut();
             }
