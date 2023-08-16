@@ -82,7 +82,7 @@ export default function RulesFormat(){
                 <li>Head-to-head, if a clear order can be established</li>
                 <li>Opposition Points Total, demonstrating the difficulty level a team has faced thus far</li>
                 <li>Goal difference counting all games</li>
-                <li>Alphabetical order</li>
+                <li>Randomiser (digital coin toss)</li>
 
 
             </ol>
