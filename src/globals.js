@@ -1,8 +1,8 @@
 export const server_url = {
     // URL: `http://192.168.0.189`,
     // URL: `http://192.168.0.113`
-    // URL: `https://35.154.194.151`,
-    URL: 'https://sakkath.souravtecken.com'
+    URL: `https://35.154.194.151`,
+    // URL: 'https://sakkath.souravtecken.com'
 }
 
 export function getImage(img){
