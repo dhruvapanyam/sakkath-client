@@ -382,7 +382,7 @@ function TeamResults({results, id, own_team=false}){
                                         </div>
                                     </Grid>
                                 </Grid>
-                                {own_team && <Grid container>
+                                {false && <Grid container>
                                 <div style={{width:'100%'}}><hr color='lightgrey' style={{width:'70%', border:'none',height:'1px'}}></hr></div>
                                     <Grid item sx={{width: '30%'}}>
                                         <div style={{float:'right', display:'flex',alignItems:'center',height:'100%', fontSize:'11px', fontWeight:300}}>
@@ -407,7 +407,9 @@ function TeamResults({results, id, own_team=false}){
                                     <Grid container>
                                         <Grid item xs={3}></Grid>
                                         <Grid item xs={6} onClick={()=>{handleOpen(i)}}>
-                                            <div className='centered' style={{backgroundColor:'teal',height:'20px',fontSize:11, marginTop:5, borderBottomLeftRadius:'10px',borderBottomRightRadius:'10px',}}>Submit Spirit Score</div>
+                                            <div className='centered' style={{backgroundColor:opp_spirit_length ? 'grey' : 'teal',height:'20px',fontSize:11, marginTop:5, borderBottomLeftRadius:'10px',borderBottomRightRadius:'10px',}}>
+                                                {opp_spirit_length ? 'Edit Spirit Score' : 'Submit Spirit Score'}
+                                            </div>
                                         </Grid>
                                         <Grid item xs={3}></Grid>
                                     </Grid>
@@ -418,7 +420,7 @@ function TeamResults({results, id, own_team=false}){
                         
         <Modal className='spirit-score-modal'
               open={open === i}
-            //   onClose={()=>{handleClose()}}
+              onClose={()=>{handleClose()}}
               aria-labelledby="modal-modal-title"
               aria-describedby="modal-modal-description"
 

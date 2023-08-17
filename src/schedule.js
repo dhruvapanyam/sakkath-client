@@ -338,6 +338,16 @@ export default function Schedule(){
 
             {tables.length && <ScheduleOverview tables={tables}></ScheduleOverview>}
 
+            {activeDay !== 1 &&
+                <div className='centered' style={{width:'100%', backgroundColor:'rgb(180,180,180)', height: '70px', marginTop:'10px', fontSize:13}}>
+                    <div style={{width: '30%'}} className='centered sponsor-img-div'><img className='sponsor-img' src={getImage('sponsors/offseason.png')}></img></div>
+                    <div style={{maxWidth:'70%', padding: '10px'}}>
+                        <a href='https://www.youtube.com/@offseasonultimate'>Youtube Channel Link</a>
+                        <div style={{fontSize:9, fontWeight:300}}>(Fields 2 & 3 will be streamed)</div>
+                    </div>
+                </div>
+            }
+
             {tables.map((table, i) => {
                 return <SlotFixtures key={i} heading={table.heading} data={table.table_data}></SlotFixtures>
             })}
