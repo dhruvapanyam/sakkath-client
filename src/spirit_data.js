@@ -9,13 +9,14 @@ import { ButtonTabs } from './schedule'
 
 function RankingView({team_data}){
     team_data.sort((t1,t2) => t2.spirit - t1.spirit)
-    return <div className='centered' style={{marginTop:'10px'}}>
+    return <div className='centered' style={{marginTop:'10px', fontSize: 13, fontWeight: 400}}>
         <table style={{border: '1px solid grey', borderCollapse:'collapse', textAlign:'center'}}>
             <thead>
                 <tr>
                     <th style={{border: '1px solid grey', borderCollapse:'collapse', padding: '5px'}}>Rank</th>
                     <th style={{border: '1px solid grey', borderCollapse:'collapse', padding: '5px'}}>Team</th>
                     <th style={{border: '1px solid grey', borderCollapse:'collapse', padding: '5px'}}>Spirit</th>
+                    <th style={{border: '1px solid grey', borderCollapse:'collapse', padding: '5px'}}>Matches</th>
                 </tr>
             </thead>
             <tbody>
@@ -24,6 +25,7 @@ function RankingView({team_data}){
                             <td style={{border: '1px solid grey', borderCollapse:'collapse', padding: '5px'}}>{i+1}.</td>
                             <td style={{border: '1px solid grey', borderCollapse:'collapse', padding: '5px'}}>{team.team_name}</td>
                             <td style={{border: '1px solid grey', borderCollapse:'collapse', padding: '5px'}}>{team.spirit}</td>
+                            <td style={{border: '1px solid grey', borderCollapse:'collapse', padding: '5px'}}>{team.num_matches}</td>
                         </tr>
                 })}
             </tbody>
