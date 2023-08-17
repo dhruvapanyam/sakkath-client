@@ -12,7 +12,7 @@ import axios from 'axios';
 
 // import {loadTokenHeader} from './utils/axios'
 import {handleSignIn, handleSignOut, loadTokenHeader} from './utils/axios'
-import { server_url } from './globals'
+import { server_url, TESTING } from './globals'
 import AdminView from './admin';
 import TournamentSetup from './tournamentStructure';
 import ScheduleChanges from './scheduleChanges';
@@ -22,6 +22,7 @@ import Venue from './venue';
 import RulesFormat from './rules';
 import SpiritPending from './spirit_pending';
 import SpiritData from './spirit_data';
+import { CircularProgress } from '@mui/material';
 
 export function login(){
     const username = window.prompt("Enter username");
@@ -85,6 +86,14 @@ function App() {
   let admin = localStorage.getItem('my_role') === 'admin';
 
   console.log('Welcome to the Sakkath app!')
+
+  if(TESTING){
+    return <div className='centered' style={{height:'100vh', width:'100%',flexDirection:'column'}}>
+    <CircularProgress></CircularProgress>
+    <br></br>
+    <div style={{color:'white'}}>Maintenance in progress :)</div>
+  </div>
+  }
 
   return (
     <>
