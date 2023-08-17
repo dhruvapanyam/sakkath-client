@@ -1,12 +1,12 @@
 export const server_url = {
     // URL: `http://192.168.0.189:4040`,
     // URL: `http://192.168.0.113`
-    URL: `https://35.154.194.151`,
-    // URL: 'https://sakkath.souravtecken.com'
+    // URL: `https://35.154.194.151`,
+    URL: 'https://sakkath.souravtecken.com'
 }
 
-export const TESTING = false;
-// export const TESTING = true;
+// export const TESTING = false;
+export const TESTING = true;
 
 export function getImage(img){
     const images = require.context('./static/', true);
