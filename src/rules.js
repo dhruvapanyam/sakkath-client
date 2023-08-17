@@ -60,6 +60,7 @@ export default function RulesFormat(){
                 <li>If the hard cap whistle is blown after a point is complete, but before the next pull, the next point must be played, since the next point is considered to have started as soon as the previous point is scored</li>
                 <li>70-minute hard stop: if the disc is in the air when the whistle is blown, that pass is completed and the game stops, and the field is cleared immediately, even if the game is tied</li>
                 <li>Only 1 time-out per team per game: duration 60 seconds</li>
+                <li>Timeouts cannot be taken once hard cap has been indicated</li>
                 <li>Only for the gold, silver, bronze matches in both divisions, a result will be necessary. Any added time may be adjusted for the next match, as per the TDs discretion, and their decision will be final.</li>
             </ul>
         </div>
@@ -83,6 +84,7 @@ export default function RulesFormat(){
                 <li>Opposition Points Total, demonstrating the difficulty level a team has faced thus far</li>
                 <li>Goal difference counting all games</li>
                 <li>Randomiser (digital coin toss)</li>
+                <li>In the case of a tie in the final stage (apart from the gold, silver, and bronze matches), a coin toss determines who wins the universe point</li>
 
 
             </ol>
