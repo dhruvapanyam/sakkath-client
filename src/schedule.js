@@ -2,7 +2,7 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 // import {DivisionTab} from './teamList'
-import { colonizeTime, getTeamLogo, get_left_color, server_url } from './globals';
+import { colonizeTime, final_match_numbers, getTeamLogo, get_left_color, server_url } from './globals';
 import { Grid, Typography, ButtonBase, Stack, Divider, Box, IconButton, Tab, Tabs, CircularProgress } from '@mui/material';
 import {Paper} from '@mui/material';
 
@@ -236,6 +236,9 @@ function ScheduleOverview({tables}){
                                 let display_stage = stage;
                                 if(stage.split('-').length > 1){
                                     display_stage = 'R' + stage.split('-')[1][1]
+                                }
+                                if(match?.match_number in final_match_numbers){
+                                    display_stage = final_match_numbers[match.match_number]
                                 }
                                 return <Grid item xs={2} key={j}>
                                     <div className='centered' style={{color:'black',width:'100%', height:'30px', background: bg_col, border: '1px solid black'}}>
