@@ -204,17 +204,19 @@ function TeamResults({results, id, own_team=false}){
         // paddingTop: '10px',
         // paddingBottom: '10px'
     };
+
+    
     
 
-    const [open, setOpen] = useState(false)
+    const [open, setOpen] = useState(-1)
     const [openResult, setOpenResult] = useState(0)
     const handleOpen = (i) => {
         if(!own_team) return;
         setOpenResult(i);
-        setOpen(true);
+        setOpen(i);
     }
     const handleClose = () => {
-        setOpen(false);
+        setOpen(-1);
     }
 
     const oppRoster = () => {
@@ -270,8 +272,8 @@ function TeamResults({results, id, own_team=false}){
             }
         )
             .then(res => {
-                // console.log('submitted!');
-                // window.location.reload();
+                console.log('submitted!');
+                window.location.reload();
             })
             .catch(err => {
                 // console.log(err.response.data)
@@ -326,14 +328,32 @@ function TeamResults({results, id, own_team=false}){
                     opp_score = result.result.score_1;
                 }
 
-                let my_spirit_score = (my_team === 'team_1') ? result.spirit.spirit_score_1 : result.spirit.spirit_score_2;
-                let opp_spirit_score = (my_team === 'team_1') ? result.spirit.spirit_score_2 : result.spirit.spirit_score_1;
+                let my_spirit = (my_team === 'team_1') ? result.spirit.spirit_score_1 : result.spirit.spirit_score_2;
+                let opp_spirit = (my_team === 'team_1') ? result.spirit.spirit_score_2 : result.spirit.spirit_score_1;
 
-                let my_spirit_length = my_spirit_score.length;
-                let opp_spirit_length = opp_spirit_score.length;
+                let my_spirit_length = my_spirit.length;
+                let opp_spirit_length = opp_spirit.length;
 
-                my_spirit_score = my_spirit_score.reduce((partialSum, a) => partialSum + a, 0);
-                opp_spirit_score = opp_spirit_score.reduce((partialSum, a) => partialSum + a, 0);
+                let my_spirit_score = my_spirit.reduce((partialSum, a) => partialSum + a, 0);
+                let opp_spirit_score = opp_spirit.reduce((partialSum, a) => partialSum + a, 0);
+
+
+                let mvp = (my_team === 'team_1') ? result.spirit.mvp_2 : result.spirit.mvp_1;
+                mvp = mvp || 'N/A'
+                let msp = (my_team === 'team_1') ? result.spirit.msp_2 : result.spirit.msp_1;
+                msp = msp || 'N/A'
+                let comments = (my_team === 'team_1') ? result.spirit.comments_2 : result.spirit.comments_1;
+                comments = comments || ''
+
+
+
+                let spirit_answers = opp_spirit.map((val,i) => {
+                    let num_options = spirit_questions[i].options.length;
+                    let option_value = Math.round((1-val) * (num_options - 1))
+                    return option_value;
+                })
+
+
 
                 // return <div><Paper key={i} elevation={16} sx={{backgroundColor: outcome ? 'rgb(124, 176, 114)' : 'rgb(181, 121, 118)', height:'110px'}}>
                 return <div key={i}><Paper key={i} elevation={16} sx={{background: bg_col, boxShadow:`0px 5px ${outcome_colors[outcome]}`}}>
@@ -396,11 +416,8 @@ function TeamResults({results, id, own_team=false}){
 
 
                         
-                        </div>
-            })}
-        </Stack>
-        <Modal
-              open={open}
+        <Modal className='spirit-score-modal'
+              open={open === i}
             //   onClose={()=>{handleClose()}}
               aria-labelledby="modal-modal-title"
               aria-describedby="modal-modal-description"
@@ -419,8 +436,8 @@ function TeamResults({results, id, own_team=false}){
                         </Grid>
                         <Grid item xs={6}>
                         <div className='centered' style={{height:'100%', width:'100%'}}>
-                                <select id={`${openResult}-mvp`}>
-                                    <option value={'N/A'}>-</option>
+                                <select id={`${openResult}-mvp`} defaultValue={mvp}>
+                                    <option value={'N/A'}>N/A</option>
                                     {(oppRoster()?.roster || []).map((player,i) => {
                                         return <option key={i} value={player}>{player}</option>
                                     })}
@@ -434,8 +451,8 @@ function TeamResults({results, id, own_team=false}){
                         </Grid>
                         <Grid item xs={6}>
                         <div className='centered' style={{height:'100%', width:'100%'}}>
-                                <select id={`${openResult}-msp`}>
-                                    <option value={'N/A'}>-</option>
+                                <select id={`${openResult}-msp`} defaultValue={msp}>
+                                    <option value={'N/A'}>{'N/A'}</option>
                                     {(oppRoster()?.roster || []).map((player,i) => {
                                         return <option key={i} value={player}>{player}</option>
                                     })}
@@ -446,15 +463,21 @@ function TeamResults({results, id, own_team=false}){
                     <br></br>
                     <br></br>
                     
-                    {spirit_questions.map((question, i) => {
+                    {spirit_questions.map((question, j) => {
 
-                        return <div key={i} style={{marginBottom:'16px'}}>
-                            <div style={{fontSize:15, marginBottom:'12px'}}>{i+1}. {question.question}</div>
-                            {question.options.map((option, j) => {
+                        let answer = -1;
+                        if(j < spirit_answers.length){
+                            answer = spirit_answers[j];
+                        }
 
-                                return <Grid container key={j} sx={{marginBottom:'10px'}}>
+                        return <div key={j} style={{marginBottom:'16px'}}>
+                            <div style={{fontSize:15, marginBottom:'12px'}}>{j+1}. {question.question}</div>
+                            {question.options.map((option, k) => {
+
+
+                                return <Grid container key={k} sx={{marginBottom:'10px'}}>
                                         <Grid item xs={2}>
-                                            <div><input className='spirit-question' type='radio' value={j} name={`spirit-question-${i}`}></input></div>
+                                            <div><input className='spirit-question' defaultChecked={answer === k} type='radio' value={k} name={`spirit-question-${j}`}></input></div>
                                         </Grid>
                                         <Grid item xs={10}>
                                             <div style={{fontSize:15, fontWeight:300, lineHeight:1.4}}>
@@ -471,7 +494,7 @@ function TeamResults({results, id, own_team=false}){
                         </Grid>
                         <Grid item xs={7}>
                         <div className='centered' style={{height:'100%'}}>
-                                <textarea id={`${openResult}-comments`}></textarea>
+                                <textarea id={`${openResult}-comments`} defaultValue={comments}></textarea>
                             </div>
                         </Grid>
                     </Grid>
@@ -488,7 +511,10 @@ function TeamResults({results, id, own_team=false}){
 
 
               </Box>
-            </Modal>
+        </Modal>
+                        </div>
+            })}
+        </Stack>
     </div>
 
     
@@ -564,9 +590,11 @@ function PendingMatch({match, id}){
 
     var submit_status = 'pending';
     var submit_score = {};
-    if(match.result.status === 'inconsistent') submit_status = 'inconsistent';
-    else if(match.team_1._id === id && match.submitted_score_1.status === 'submitted') {submit_status = 'waiting'; submit_score = match.submitted_score_1}
+    if(match.team_1._id === id && match.submitted_score_1.status === 'submitted') {submit_status = 'waiting'; submit_score = match.submitted_score_1}
     else if(match.team_2._id === id && match.submitted_score_2.status === 'submitted') {submit_status = 'waiting'; submit_score = match.submitted_score_2}
+    if(match.result.status === 'inconsistent') submit_status = 'inconsistent';
+
+    console.log(match)
 
     return <div style={{marginTop:'0px', marginBottom:'40px'}}>
         <div style={{textAlign:'center',color:'white',padding:'20px'}}>Pending</div>
@@ -600,7 +628,7 @@ function PendingMatch({match, id}){
                         {
                             submit_status === 'waiting' &&
                             <div className='centered' style={{height:'100%', padding:'15px', fontSize:13}}>
-                                <Alert severity='success'>Submitted ({submit_score?.score_1}-{submit_score?.score_2}), waiting for other team!</Alert>
+                                <Alert severity='success'>Waiting for the other team!</Alert>
                             </div>
                         }
                     </Stack>
@@ -624,13 +652,14 @@ function PendingMatch({match, id}){
                   Submit Score [Match #{match.match_number}]
                 </Typography>
                 <Stack padding={3} spacing={1}>
+                    <div className='centered' style={{fontSize:11, fontWeight:300}}>(Please note the order of the teams)</div>
                     <Grid container>
                         <Grid item xs={9}>
                             <TeamDisplay team_name={match.team_1.team_name} logo={match.team_1.logo} logo_size={20} team_name_size={12}></TeamDisplay>
                         </Grid>
                         <Grid item xs={3}>
                             <div className='centered' style={{height:'100%'}}>
-                                <input id={`submit-score-team_1`} type={'number'} min={0} max={13} defaultValue={0}></input>
+                                <input id={`submit-score-team_1`} type={'number'} min={0} max={13} defaultValue={submit_score?.score_1 || 0}></input>
                             </div>
                         </Grid>
                     </Grid>
@@ -640,7 +669,7 @@ function PendingMatch({match, id}){
                         </Grid>
                         <Grid item xs={3}>
                             <div className='centered' style={{height:'100%'}}>
-                                <input id={`submit-score-team_2`} type={'number'} min={0} max={13} defaultValue={0}></input>
+                                <input id={`submit-score-team_2`} type={'number'} min={0} max={13} defaultValue={submit_score?.score_2 || 0}></input>
                             </div>
                         </Grid>
                     </Grid>
@@ -709,10 +738,10 @@ export default function TeamDetails(){
         <TeamUpcoming id={id} teamInfo={teamInfo}></TeamUpcoming>
 
         {teamInfo?.own_team && <PendingMatch match={teamInfo?.upcoming} id={id}></PendingMatch>}
+        {/* {1 && <PendingMatch match={teamInfo?.upcoming} id={id}></PendingMatch>} */}
         
         <TeamResults id={id} own_team={teamInfo?.own_team} results={teamResults?.results || []}></TeamResults>
         {/* {pendingScores} */}
-        {/* {1 && <PendingMatch match={teamInfo?.upcoming} id={id}></PendingMatch>} */}
     </>
     )
 }

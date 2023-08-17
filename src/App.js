@@ -20,6 +20,8 @@ import InfoView from './info';
 import LoginPage from './login';
 import Venue from './venue';
 import RulesFormat from './rules';
+import SpiritPending from './spirit_pending';
+import SpiritData from './spirit_data';
 
 export function login(){
     const username = window.prompt("Enter username");
@@ -102,11 +104,13 @@ function App() {
           <Route path='/login' element={<LoginPage/>}></Route>
           <Route path='/venue' element={<Venue/>}></Route>
           <Route path='/rules' element={<RulesFormat/>}></Route>
+          <Route path='/spirit_pending' element={<SpiritPending/>}></Route>
 
 
           { admin && <Route path='/admin' element={<AdminView></AdminView>}></Route> }
           { admin && <Route path='/setup' element={<TournamentSetup/>}></Route> }
           { admin && <Route path='/schedule_changes' element={<ScheduleChanges/>}></Route> }
+          { admin && <Route path='/spirit_data' element={<SpiritData/>}></Route> }
 
           <Route path="*" element={<RedirectComponent></RedirectComponent>}></Route>
 

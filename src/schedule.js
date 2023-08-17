@@ -257,7 +257,7 @@ function ScheduleOverview({tables}){
                     return <Grid key={i} item xs={4} padding={1}>
                             <div style={{width:'100%', height: '22px'}}>
                                 <div style={{height:'20px', width:'20px',border:'1px solid black', background: col, float:'left'}}></div>
-                                <div className='centered' style={{float:'left', marginLeft:'5px', fontSize:12, height:'100%'}}>{legend[col].division} - {legend[col].stage_name[0]}</div>
+                                <div className='centered' style={{float:'left', marginLeft:'5px', fontSize:11, height:'100%'}}>{legend[col].division} - {legend[col].stage_name[0]}</div>
                             </div>
                         </Grid>
                 })}

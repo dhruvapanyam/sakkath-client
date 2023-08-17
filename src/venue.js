@@ -10,7 +10,7 @@ export default function Venue(){
     let img_height = window.innerHeight - 140;
     return <div>
         <div style={{marginTop: '80px', marginBottom: '20px'}} className='centered'>
-            <a style={{color: 'lightblue'}} href='https://goo.gl/maps/NLuH5CSeHJNEPcKw5'>Google Maps Link</a>
+            <a style={{color: 'lightblue'}} href='https://goo.gl/maps/NLuH5CSeHJNEPcKw5'>Gopalan Sports Academy - Maps Link</a>
         </div>
         <Grid container>
             <Grid item xs={12}>

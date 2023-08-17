@@ -23,10 +23,10 @@ export default function AdminView(){
                 title:"Schedule Changes",
                 href:"/schedule_changes"
             },
-            // {
-            //     title:"Misc",
-            //     href:""
-            // },
+            {
+                title:"Spirit Data",
+                href:"/spirit_data"
+            },
             ].map((val,i) => {
                 return <LandingCard key={i} value={val}></LandingCard>
             })}
