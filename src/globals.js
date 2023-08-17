@@ -5,8 +5,8 @@ export const server_url = {
     URL: 'https://sakkath.souravtecken.com'
 }
 
-// export const TESTING = false;
-export const TESTING = true;
+export const TESTING = false;
+// export const TESTING = true;
 
 export function getImage(img){
     const images = require.context('./static/', true);
