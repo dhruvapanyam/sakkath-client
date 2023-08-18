@@ -57,6 +57,7 @@ export default function RulesFormat(){
                 <li>Half-time at the 30-minute mark: when you hear the whistle, finish the point and take half</li>
                 <li>If any team reaches 8 points before the half-time at 30 minutes, you should call half-time</li>
                 <li>Half-time is 2 minutes, counted from the time of the score that initiates the half-time</li>
+                <li>After half-time, only change possession. Do not change sides, to save time.</li>
                 <li>65-minute hard cap: the point being played is completed, and is the last point of the match, even if that results in a tie</li>
                 <li>If the hard cap whistle is blown after a point is complete, but before the next pull, the next point must be played, since the next point is considered to have started as soon as the previous point is scored</li>
                 <li>70-minute hard stop: if the disc is in the air when the whistle is blown, that pass is completed and the game stops, and the field is cleared immediately, even if the game is tied</li>
