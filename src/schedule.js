@@ -223,14 +223,35 @@ function ScheduleOverview({tables}){
     return <div style={{marginTop:20, color:'white'}}>
         {heading}
         <Stack padding={1} paddingRight={4}>
+            <Grid container sx={{fontSize:11, fontWeight: 300, marginTop: '10px'}}>
+                <Grid item xs={2}></Grid>
+                <Grid item xs={10}>
+                    <Grid container>
+                        <Grid item xs={2}><div className='centered' style={{marginBottom:'6px'}}>Field 1</div></Grid>
+                        <Grid item xs={2}><div className='centered' style={{marginBottom:'6px',flexDirection:'column'}}>Field 2 <div style={{fontSize:6, fontWeight:200}}>(streaming)</div></div></Grid>
+                        <Grid item xs={2}><div className='centered' style={{marginBottom:'6px'}}>Field 3</div></Grid>
+                        <Grid item xs={2}><div className='centered' style={{marginBottom:'6px'}}>Field 4</div></Grid>
+                        <Grid item xs={2}><div className='centered' style={{marginBottom:'6px',flexDirection:'column'}}>Field 5 <div style={{fontSize:6, fontWeight:200}}>(streaming)</div></div></Grid>
+                        <Grid item xs={2}><div className='centered' style={{marginBottom:'6px'}}>Field 6</div></Grid>
+                    </Grid>
+                </Grid>
+            </Grid>
             {tables.map((table,i) => {
+                var slots = [...table.table_data];
+                var fields = {}
+                for(let i=1; i<=6; i++) fields[i] = null;
+                slots.forEach(slot => fields[slot.field] = slot);
+
                 return <Grid container key={i}  onClick={()=>{scrollToTable(table.heading)}}>
                     <Grid item xs={2}>
                         <div className='centered' style={{height:'30px',fontSize:14}}>{table.heading}</div>
                     </Grid>
                     <Grid item xs={10}>
                         <Grid container>
-                            {table.table_data.map((match,j) => {
+                            {Object.keys(fields).map((field_num,j) => {
+                                var match = fields[field_num];
+                                if(match === null) return <Grid item xs={2} key={j}></Grid>
+
                                 let bg_col = get_left_color(match?.stage?.division, match?.stage?.stage_name[0])
                                 let stage = match?.stage?.stage_name || '';
                                 let display_stage = stage;
@@ -241,7 +262,7 @@ function ScheduleOverview({tables}){
                                     display_stage = final_match_numbers[match.match_number]
                                 }
                                 return <Grid item xs={2} key={j}>
-                                    <div className='centered' style={{color:'black',width:'100%', height:'30px', background: bg_col, border: '1px solid black'}}>
+                                    <div className='centered' style={{color:'black',width:'100%', height:'30px', background: bg_col, border: `1px solid black`, color: (field_num==2 || field_num==5) ? 'rgb(100,0,0)' : 'black'}}>
                                         <div className='centered' style={{fontSize:10}}>
                                             {display_stage}
                                         </div>
