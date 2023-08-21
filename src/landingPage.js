@@ -14,8 +14,14 @@ export function LandingCard({value}){
     return <Grid item xs={6} padding={2}>
                 <div style={{width:'100%', aspectRatio:1, color: 'black',backgroundColor: 1 ? 'white' : 'rgb(227, 109, 172)', background: 'linear-gradient(120deg, white 0%, rgb(227, 109, 172) 70%)', borderRadius:'20px', border:'2px solid black', boxShadow:'10px 10px rgb(28, 147, 214)'}}>
                 {/* <div style={{width:'100%', aspectRatio:1, color: 'black',backgroundColor: 1 ? 'white' : 'rgb(227, 109, 172)', background: 'linear-gradient(120deg, white 0%, rgb(245, 188, 224) 0%)', borderRadius:'20px', border:'2px solid black', boxShadow:'10px 10px rgb(100, 163, 189)'}}> */}
-                    <div className='centered' onClick={()=>{navigate(value.href)}} style={{height:'100%'}}>
-                        {value.title}
+                    <div className='centered' onClick={()=>{
+                            if(value?.type === 'external') 
+                                window.open(value.href, '_blank')
+                            else 
+                                navigate(value.href);
+                            }} 
+                        style={{height:'100%'}}>
+                            {value.title}
                     </div>
                 </div>
             </Grid>
@@ -47,13 +53,20 @@ function SponsorBand(){
 export default function LandingPage({admin}){
 
 
-    let views = [{
-            title:"Schedule",
-            href:"/schedule"
+    let views = [
+        {
+            title:"Photos",
+            href:"https://www.google.com",
+            type:'external'
         },
         {
             title:"Standings",
             href:"/standings"
+        },
+        
+        {
+            title:"Schedule",
+            href:"/schedule"
         },
         {
             title:"Rules",
