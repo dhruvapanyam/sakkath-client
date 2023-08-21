@@ -24,7 +24,7 @@ function RankingView({team_data}){
                     return <tr key={i}>
                             <td style={{border: '1px solid grey', borderCollapse:'collapse', padding: '5px'}}>{i+1}.</td>
                             <td style={{border: '1px solid grey', borderCollapse:'collapse', padding: '5px'}}>{team.team_name}</td>
-                            <td style={{border: '1px solid grey', borderCollapse:'collapse', padding: '5px'}}>{team.spirit}</td>
+                            <td style={{border: '1px solid grey', borderCollapse:'collapse', padding: '5px'}}>{Math.round(100*team.spirit)/100}</td>
                             <td style={{border: '1px solid grey', borderCollapse:'collapse', padding: '5px'}}>{team.num_matches}</td>
                         </tr>
                 })}
