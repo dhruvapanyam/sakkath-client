@@ -56,7 +56,7 @@ export default function LandingPage({admin}){
     let views = [
         {
             title:"Photos",
-            href:"https://www.google.com",
+            href:"https://drive.google.com/drive/folders/1RZUse0NwD0Pux2gnwnTx2cTYZu3y27EQ",
             type:'external'
         },
         {
