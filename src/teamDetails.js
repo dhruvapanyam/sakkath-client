@@ -3,7 +3,7 @@ import axios from 'axios'
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 // import {DivisionTab} from './teamList'
-import { server_url, colors_gradient, get_left_color, getTeamLogo } from './globals';
+import { server_url, colors_gradient, get_left_color, getTeamLogo, STATIC_SITE } from './globals';
 import { Grid, Typography, Stack, Divider, Box, IconButton, Button, Alert } from '@mui/material';
 import {Paper} from '@mui/material';
 import Modal from '@mui/material/Modal';
@@ -12,6 +12,8 @@ import {ButtonTabs, SlotFixtures, TeamDisplay} from './schedule'
 import { handleError } from './utils/axios';
 
 import {spirit_questions} from './globals'
+
+import teams_minified from './data_dump/teams.min.json'
 
 
 function TeamOverview({teamData}){
@@ -228,6 +230,8 @@ function TeamResults({results, id, own_team=false}){
     }
 
     const submitSpiritScore = () => {
+        if(STATIC_SITE) return;
+
         let mvp = document.getElementById(`${openResult}-mvp`).value;
         let msp = document.getElementById(`${openResult}-msp`).value;
         let comments = document.getElementById(`${openResult}-comments`).value;
@@ -566,6 +570,7 @@ function PendingMatch({match, id}){
 
 
     function submitScore(){
+        if(STATIC_SITE) return;
         let s1 = document.getElementById('submit-score-team_1')?.value;
         let s2 = document.getElementById('submit-score-team_2')?.value;
         // console.log(s1,s2)
@@ -708,6 +713,34 @@ export default function TeamDetails(){
 
     useEffect(() => {
         // console.log('using effect')
+        if(STATIC_SITE){
+            let team_data = teams_minified.teams[id];
+
+            for(let i=0; i<team_data.results.results.length; i++){
+                let mid = team_data.results.results[i];
+                if(mid in teams_minified.matches == false){
+                    continue;
+                }
+                let mdata = {...teams_minified.matches[mid]};
+                mdata.team_1 = {...teams_minified.teams[mdata.team_1]?.info?.team_data}
+                mdata.team_2 = {...teams_minified.teams[mdata.team_2]?.info?.team_data}
+                mdata.spirit = {
+                    spirit_score_1: [],
+                    spirit_score_2: [],
+                    mvp_1: '',
+                    mvp_2: '',
+                    msp_1: '',
+                    msp_2: '',
+                    comments_1: '',
+                    comments_2: '',
+                }
+                team_data.results.results[i] = {...mdata};
+            }
+            setTeamResults({...team_data.results})
+            return;
+        }
+
+
         axios.get(
             `${server_url.URL}/team_results/${id}`
         )
@@ -721,6 +754,14 @@ export default function TeamDetails(){
 
     useEffect(() => {
         // console.log('using effect')
+        if(STATIC_SITE){
+            let team_data = teams_minified.teams[id];
+
+            setTeamInfo({...team_data.info})
+            return;
+        }
+
+
         axios.get(
             `${server_url.URL}/team_info/${id}`
         )

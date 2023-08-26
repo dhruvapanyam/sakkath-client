@@ -5,7 +5,7 @@ import axios from 'axios'
 import { Alert, Button, Grid, Stack } from '@mui/material';
 import { getImage } from './globals';
 
-import { server_url } from './globals'
+import { server_url, STATIC_SITE } from './globals'
 import {handleSignIn, handleSignOut, loadTokenHeader} from './utils/axios'
 import { useState } from 'react';
 
@@ -16,6 +16,7 @@ export default function LoginPage(){
     const [incorrect, setIncorrect] = useState(false)
 
     function login(username, password, navigate_to){
+        if(STATIC_SITE) return;
         axios.post(
             `${server_url.URL}/signin`,
             {

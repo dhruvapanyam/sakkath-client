@@ -18,7 +18,7 @@ import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
 import Avatar from '@mui/material/Avatar';
 import Tooltip from '@mui/material/Tooltip';
-import { getImage, getTeamLogo } from './globals';
+import { getImage, getTeamLogo, STATIC_SITE } from './globals';
 import { login, logout } from './App';
 
 export default function MenuAppBar() {
@@ -40,6 +40,44 @@ export default function MenuAppBar() {
 
   // console.log('token',token,my_team_logo)
 
+  var login_dom = <></>;
+
+  if(!STATIC_SITE){
+
+      if(token){
+        login_dom = <div>
+        <Tooltip title="Open settings">
+          <IconButton onClick={handleMenu} sx={{ p: 0 }}>
+            <Avatar alt="Remy Sharp" src={token ? getTeamLogo(my_team_logo) : sample_logo} />
+          </IconButton>
+        </Tooltip>
+
+      <Menu
+        id="menu-appbar"
+        anchorEl={anchorEl}
+        anchorOrigin={{
+          vertical: 'top',
+          horizontal: 'right',
+        }}
+        keepMounted
+        transformOrigin={{
+          vertical: 'top',
+          horizontal: 'right',
+        }}
+        open={Boolean(anchorEl)}
+        onClose={handleClose}
+        >
+        {my_team_id && <MenuItem sx={{fontFamily:'Poppins', fontSize:13}} onClick={()=>{navigate(`/team/${my_team_id}`);handleClose()}}>Team Page</MenuItem>}
+        <MenuItem sx={{fontFamily:'Poppins', fontSize:13}} onClick={logout} >Logout</MenuItem>
+
+      </Menu>
+      </div>
+    }
+    else{
+      login_dom = <div style={{fontFamily:'Poppins', fontSize:13, color: 'grey', height:'100%'}} onClick={()=>{navigate('/login')}} >Login</div>
+    }
+  }
+  
   return (
     <Box id="navbar" sx={{ flexGrow: 1, borderBottom: '1px solid grey', position: 'fixed', top:0, width: '100%'}}>
       <AppBar position="static" style={{backgroundColor: 'black'}}>
@@ -68,37 +106,7 @@ export default function MenuAppBar() {
       />
           </Typography>
             <div>
-              {token &&
-                <div>
-                <Tooltip title="Open settings">
-                  <IconButton onClick={handleMenu} sx={{ p: 0 }}>
-                    <Avatar alt="Remy Sharp" src={token ? getTeamLogo(my_team_logo) : sample_logo} />
-                  </IconButton>
-                </Tooltip>
-
-              <Menu
-                id="menu-appbar"
-                anchorEl={anchorEl}
-                anchorOrigin={{
-                  vertical: 'top',
-                  horizontal: 'right',
-                }}
-                keepMounted
-                transformOrigin={{
-                  vertical: 'top',
-                  horizontal: 'right',
-                }}
-                open={Boolean(anchorEl)}
-                onClose={handleClose}
-              >
-                {my_team_id && <MenuItem sx={{fontFamily:'Poppins', fontSize:13}} onClick={()=>{navigate(`/team/${my_team_id}`);handleClose()}}>Team Page</MenuItem>}
-                <MenuItem sx={{fontFamily:'Poppins', fontSize:13}} onClick={logout} >Logout</MenuItem>
-
-              </Menu>
-              </div>
-            }
-            
-            {!token && <div style={{fontFamily:'Poppins', fontSize:13, color: 'grey', height:'100%'}} onClick={()=>{navigate('/login')}} >Login</div>}
+              {login_dom}
             </div>
         </Toolbar>
       </AppBar>

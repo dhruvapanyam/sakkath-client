@@ -2,11 +2,13 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 // import {DivisionTab} from './teamList'
-import { server_url, get_left_color } from './globals';
+import { server_url, get_left_color, STATIC_SITE } from './globals';
 import { Grid, Typography, ButtonBase, Stack, Divider, Box, IconButton, Tabs, Tab, CircularProgress } from '@mui/material';
 import {Paper} from '@mui/material';
 
 import {ButtonTabs, SlotFixtures, TeamDisplay} from './schedule'
+
+import standings_dump from './data_dump/standings.json'
 
 
 
@@ -137,6 +139,18 @@ export default function Standings(){
     const [dataLoaded, setDataLoaded] = useState(false);
 
     useEffect(() => {
+        if(STATIC_SITE){
+            console.log(standings)
+            setStandings({...standings_dump.standings});
+            let team_dict = {}
+            for(let team of standings_dump.teams){
+                team_dict[team._id.toString()] = team;
+            }
+            setTeams(team_dict);
+            setDataLoaded(true);
+            return;
+        }
+
         axios.get(
             `${server_url.URL}/standings`
         )

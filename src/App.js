@@ -12,7 +12,7 @@ import axios from 'axios';
 
 // import {loadTokenHeader} from './utils/axios'
 import {handleSignIn, handleSignOut, loadTokenHeader} from './utils/axios'
-import { server_url, TESTING } from './globals'
+import { server_url, STATIC_SITE, TESTING } from './globals'
 import AdminView from './admin';
 import TournamentSetup from './tournamentStructure';
 import ScheduleChanges from './scheduleChanges';
@@ -29,6 +29,8 @@ export function login(){
     if(username === null) return;
     // const password = window.prompt("Enter password");
     // if(password === null) return;
+
+    if(STATIC_SITE) return;
 
     axios.post(
         `${server_url.URL}/signin`,
@@ -53,6 +55,7 @@ export function login(){
 }
 
 export function logout(){
+    if(STATIC_SITE) return;
     axios.post(`${server_url.URL}/signout`)
     .then(res => {handleSignOut();window.location.reload()})
     .catch(
@@ -82,6 +85,10 @@ function App() {
     window.onresize = phoneify
   }, [])
 
+  if(STATIC_SITE){
+    handleSignOut();
+  }
+
 
   let admin = localStorage.getItem('my_role') === 'admin';
 
@@ -110,16 +117,17 @@ function App() {
           <Route path='/standings' element={<Standings></Standings>}></Route>
           <Route path='/schedule' element={<Schedule></Schedule>}></Route>
           <Route path='/info' element={<InfoView></InfoView>}></Route>
-          <Route path='/login' element={<LoginPage/>}></Route>
           <Route path='/venue' element={<Venue/>}></Route>
           <Route path='/rules' element={<RulesFormat/>}></Route>
-          <Route path='/spirit_pending' element={<SpiritPending/>}></Route>
+          
+          { !STATIC_SITE && <Route path='/spirit_pending' element={<SpiritPending/>}></Route>}
+          { !STATIC_SITE && <Route path='/login' element={<LoginPage/>}></Route>}
 
 
-          { admin && <Route path='/admin' element={<AdminView></AdminView>}></Route> }
-          { admin && <Route path='/setup' element={<TournamentSetup/>}></Route> }
-          { admin && <Route path='/schedule_changes' element={<ScheduleChanges/>}></Route> }
-          { admin && <Route path='/spirit_data' element={<SpiritData/>}></Route> }
+          { !STATIC_SITE && admin && <Route path='/admin' element={<AdminView></AdminView>}></Route> }
+          { !STATIC_SITE && admin && <Route path='/setup' element={<TournamentSetup/>}></Route> }
+          { !STATIC_SITE && admin && <Route path='/schedule_changes' element={<ScheduleChanges/>}></Route> }
+          { !STATIC_SITE && admin && <Route path='/spirit_data' element={<SpiritData/>}></Route> }
 
           <Route path="*" element={<RedirectComponent></RedirectComponent>}></Route>
 

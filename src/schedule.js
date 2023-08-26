@@ -2,11 +2,13 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 // import {DivisionTab} from './teamList'
-import { colonizeTime, final_match_numbers, getTeamLogo, get_left_color, server_url } from './globals';
+import { colonizeTime, final_match_numbers, getTeamLogo, get_left_color, server_url, STATIC_SITE } from './globals';
 import { Grid, Typography, ButtonBase, Stack, Divider, Box, IconButton, Tab, Tabs, CircularProgress } from '@mui/material';
 import {Paper} from '@mui/material';
 
 import { getImage, colors_gradient } from './globals';
+
+import fixtures_dump from './data_dump/fixtures.json'
 
 
 
@@ -305,6 +307,17 @@ export default function Schedule(){
     const [schedule, setSchedule] = useState([])
 
     useEffect(() => {
+
+        if(STATIC_SITE){
+            setSchedule([...fixtures_dump])
+            // console.log(res.data)
+            let day = localStorage.getItem('active_day');
+            if(day) activateDay(day)
+            setDataLoaded(true);
+            return;
+        }
+
+
         axios.get(
             `${server_url.URL}/fixtures`
         )

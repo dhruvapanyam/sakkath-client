@@ -8,6 +8,10 @@ export const server_url = {
 export const TESTING = false;
 // export const TESTING = true;
 
+// export const STATIC_SITE = false;
+export const STATIC_SITE = true;
+
+
 export function getImage(img){
     const images = require.context('./static/', true);
     var imageUrl;
